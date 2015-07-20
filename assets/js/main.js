@@ -351,43 +351,43 @@
 			return d3Atom[0][0].parentNode.__data__;
 		}
 
-		function addHydrogens (atom, numHydrogens) {
-			var newHydrogen = function () {
-				return {
-					symbol: 'H',
-					size: '1',
-					bonds: 1,
-					id: generateRandomID (),
-					x: atom.x + getRandomInt (-15, 15),
-					y: atom.y + getRandomInt (-15, 15)
-				};
-			};
-			var tempHydrogen;
-			for (var i = 0; i < numHydrogens; i++) {
-				tempHydrogen = newHydrogen();
-				nodes.push(tempHydrogen);
-				links.push({
-					source: atom,
-					target: tempHydrogen,
-					bondType: 1,
-					id: generateRandomID()
-				});
-			}
-		} // function addHydrogens (atom, numHydrogens)
+		// function addHydrogens (atom, numHydrogens) {
+		// 	var newHydrogen = function () {
+		// 		return {
+		// 			symbol: 'H',
+		// 			size: '1',
+		// 			bonds: 1,
+		// 			id: generateRandomID (),
+		// 			x: atom.x + getRandomInt (-15, 15),
+		// 			y: atom.y + getRandomInt (-15, 15)
+		// 		};
+		// 	};
+		// 	var tempHydrogen;
+		// 	for (var i = 0; i < numHydrogens; i++) {
+		// 		tempHydrogen = newHydrogen();
+		// 		nodes.push(tempHydrogen);
+		// 		links.push({
+		// 			source: atom,
+		// 			target: tempHydrogen,
+		// 			bondType: 1,
+		// 			id: generateRandomID()
+		// 		});
+		// 	}
+		// } // function addHydrogens (atom, numHydrogens)
 
-		function removeHydrogen (oldAtom) {
-			var target, source, bondsArr = getBonds(oldAtom.id);
-			for (var i = bondsArr.length - 1; i >= 0; i--) {
-				target = bondsArr[i].target, source = bondsArr[i].source;
-				if (target.symbol === 'H' || source.symbol === 'H' ) {
-					var hydroId = source.symbol === 'H'?
-																		source.id:
-																		target.id;
-					removeAtom(hydroId);
-					return;
-				}
-			}
-		}
+		// function removeHydrogen (oldAtom) {
+		// 	var target, source, bondsArr = getBonds(oldAtom.id);
+		// 	for (var i = bondsArr.length - 1; i >= 0; i--) {
+		// 		target = bondsArr[i].target, source = bondsArr[i].source;
+		// 		if (target.symbol === 'H' || source.symbol === 'H' ) {
+		// 			var hydroId = source.symbol === 'H'?
+		// 																source.id:
+		// 																target.id;
+		// 			removeAtom(hydroId);
+		// 			return;
+		// 		}
+		// 	}
+		// }
 
 		function removeAtom (id) {
 			var atomToRemove = retriveAtom(id);
@@ -448,8 +448,8 @@
 			n = nodes.push(newAtom);
 
 			getAtomData(atomSelected).bonds++; // Increment bond count on selected atom
-			addHydrogens(newAtom, atomDB[atomType].lonePairs - 1); // Adds hydrogens to new atom
-			removeHydrogen(getAtomData(atomSelected)); // Remove hydrogen from selected atom
+			// addHydrogens(newAtom, atomDB[atomType].lonePairs - 1); // Adds hydrogens to new atom
+			// removeHydrogen(getAtomData(atomSelected)); // Remove hydrogen from selected atom
 
 			links.push({
 				source: newAtom,
