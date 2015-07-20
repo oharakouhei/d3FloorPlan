@@ -21,6 +21,20 @@ roomDB ['K'] = {
 	size: 4
 };
 
+roomDB ['LDK'] = {
+	name: 'Living Dining Kitchen',
+	symbol: 'LDK',
+	lonePairs: 3,
+	size: 12
+};
+
+roomDB ['DK'] = {
+	name: 'Dining Kitchen',
+	symbol: 'DK',
+	lonePairs: 3,
+	size: 8
+};
+
 roomDB ['R'] = {
 	name: 'Room',
 	symbol: 'R',

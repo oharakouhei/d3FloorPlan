@@ -33,6 +33,7 @@
 					    	</span> -->
 						    <select id="floorPlanExample" class="form-control">
 							    <option selected value="1LDK">1LDK</option>
+							    <option selected value="2DK">2DK</option>
 							</select>
 							<span class="input-group-btn">
 					    		<button style="margin-left: 5px; margin-right:210px" class="btn btn-default" onclick="loadFloorPlanExample()" type="button">Load FloorPlan</button>
@@ -53,6 +54,8 @@
 						    Add Room <span class="caret"></span>
 						  </button>
 						  <ul class="dropdown-menu" role="menu">
+						    <li><a href="#" onclick="addRoom('LDK')">Living Dining Kitchen (LDK)</a></li>
+						    <li><a href="#" onclick="addRoom('DK')">Dining Kitchen (DK)</a></li>
 						    <li><a href="#" onclick="addRoom('L')">Living (L)</a></li>
 						    <li><a href="#" onclick="addRoom('D')">Dining (D)</a></li>
 						    <li><a href="#" onclick="addRoom('K')">Kitchen (K)</a></li>
@@ -66,13 +69,9 @@
 						  </ul>
 						</div>
 						<div class="btn-group">
-						  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-						    Change Room Size <span class="caret"></span>
-						  </button>
-						  <ul class="dropdown-menu" role="menu">
-						    <li><a href="#" onclick="changeRoomSize(1)">+1</a></li>
-						    <li><a href="#" onclick="changeRoomSize(-1)">-1</a></li>
-						  </ul>
+						  <a class="btn btn-success" href="#" onclick="changeRoomSize(-1)">-1</a>
+						  <button type="button" class="btn btn-success">Change Room Size</button>
+						  <a class="btn btn-success" href="#" onclick="changeRoomSize(1)">+1</a>
 						</div>
 						<button type="button" onclick="deleteRoom()" class="btn btn-danger">Delete Room </button>
 					</div>
