@@ -130,6 +130,53 @@
 
 		buildMolecule();
 
+		// update g tag element of line
+		function updateLineGElement (g) {
+			// Add bond line
+			d3.select(g)
+				.append("line")
+				.style("stroke-width", function(d) { return (d.bondType * 3 - 2) * 2 + "px"; });
+
+			// If double add second line
+			d3.select(g)
+				.filter(function(d) { return d.bondType >= 2; })
+				.append("line")
+				.style("stroke-width", function(d) { return (d.bondType * 2 - 2) * 2 + "px"; })
+				.attr("class", "double");
+
+			d3.select(g)
+				.filter(function(d) { return d.bondType === 3; }).append("line")
+				.attr("class", "triple");
+
+			// Give bond the power to be selected
+			d3.select(g)
+				.on("click", bondClicked);
+		}; // function updateLineGElement (g)
+
+		// update g tag element of node
+		function updateNodeGElement (g) {
+			// Add node circle
+			d3.select(g)
+				.append("circle")
+				.attr("r", function(d) { return radius(d.size); })
+				.style("fill", function(d) { return color(d.symbol); });
+
+			// Add atom symbol
+			d3.select(g)
+				.append("text")
+				.attr("dy", ".35em")
+				.attr("text-anchor", "middle")
+				.text(function(d) { return d.symbol + d.size; });
+
+			// Give atom the power to be selected
+			d3.select(g)
+				.on("click", atomClicked);
+
+			// Grant atom the power of gravity
+			d3.select(g)
+				.call(force.drag);
+		}; // function updateNodeGElement (g)
+
 		function buildMolecule () {
 			// Update link data
 			link = link.data(links, function (d) {return d.id; });
@@ -138,25 +185,10 @@
 			link.enter().insert("g", ".node")
 				.attr("class", "link")
 				.each(function(d) {
-					// Add bond line
-					d3.select(this)
-						.append("line")
-						.style("stroke-width", function(d) { return (d.bondType * 3 - 2) * 2 + "px"; });
-
-					// If double add second line
-					d3.select(this)
-						.filter(function(d) { return d.bondType >= 2; })
-						.append("line")
-						.style("stroke-width", function(d) { return (d.bondType * 2 - 2) * 2 + "px"; })
-						.attr("class", "double");
-
-					d3.select(this)
-						.filter(function(d) { return d.bondType === 3; }).append("line")
-						.attr("class", "triple");
-
-					// Give bond the power to be selected
-					d3.select(this)
-						.on("click", bondClicked);
+					// this function is called only when the page is loaded for the first time
+					// Add id
+					d3.select(this).attr("id", "link_" + d.id);
+					updateLineGElement(this);
 				});
 
 			// Delete removed links
@@ -164,31 +196,14 @@
 
 			// Update node data
 			node = node.data(nodes, function (d) {return d.id; });
-
 			// Create new nodes
 			node.enter().append("g")
 				.attr("class", "node")
 				.each(function(d) {
-					// Add node circle
-					d3.select(this)
-						.append("circle")
-						.attr("r", function(d) { return radius(d.size); })
-						.style("fill", function(d) { return color(d.symbol); });
-
-					// Add atom symbol
-					d3.select(this)
-						.append("text")
-						.attr("dy", ".35em")
-						.attr("text-anchor", "middle")
-						.text(function(d) { return d.symbol; });
-
-					// Give atom the power to be selected
-					d3.select(this)
-						.on("click", atomClicked);
-
-					// Grant atom the power of gravity
-					d3.select(this)
-						.call(force.drag);
+					// this function is called only when the page is loaded for the first time
+					// Add id
+					d3.select(this).attr("id", "node_" + d.id);
+					updateNodeGElement(this);
 				});
 
 			// Delete removed nodes
@@ -309,11 +324,46 @@
 					bondSelected.style("filter", "");
 					bondSelected = null;
 
-		 			break;
+					break;
 				} // if (links[i].id === bondData.id)
 			} // for (var i = links.length - 1; i >= 0; i--)
 			buildMolecule();
 		}; // window.changeBond = function (newBondType)
+
+		window.changeAtomSize = function (sizeDiff) {
+			if (!atomSelected) {
+				Messenger().post({
+					message: 'No Atom Selected',
+					type: 'error',
+					showCloseButton: true
+				});
+				return;
+			}
+			var atomData = getAtomData(atomSelected);
+			var changeAtomSizePossible = function (atom) {
+				return (0 < atom.size + sizeDiff);
+			};
+
+			if (!sizeDiff || ( -1 != sizeDiff && 1 != sizeDiff)) {
+				Messenger().post({
+					message: 'Internal error :(',
+					type: 'error',
+					showCloseButton: true
+				});
+				return;
+			}
+			else if (!changeAtomSizePossible(atomData)) {
+				Messenger().post({
+					message: 'Atom size cannot be 0 and less!',
+					type: 'error',
+					showCloseButton: true
+				});
+				return;
+			}
+			nodes[atomData.id - 1].size += sizeDiff;
+			updateNodeGElement("#node_"+atomData.id);
+			buildMolecule();
+		}; // window.changeAtomSize = function (sizeDiff)
 
 		window.addAtom = function (atomType) {
 			if (!atomType) {

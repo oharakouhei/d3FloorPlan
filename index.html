@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 	<head>
-		<title>orgoShmorgo</title>
+		<title>d3FloorPlan</title>
 
 		<style type="text/css">
 		 body {
@@ -71,7 +71,16 @@
 						</div>
 						<div class="btn-group">
 						  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-						    Bonds <span class="caret"></span>
+						    Change Atom Size <span class="caret"></span>
+						  </button>
+						  <ul class="dropdown-menu" role="menu">
+						    <li><a href="#" onclick="changeAtomSize(1)">+1</a></li>
+						    <li><a href="#" onclick="changeAtomSize(-1)">-1</a></li>
+						  </ul>
+						</div>
+						<div class="btn-group">
+						  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+						    Change Bonds <span class="caret"></span>
 						  </button>
 						  <ul class="dropdown-menu" role="menu">
 						    <li><a href="#" onclick="changeBond(1)">Single Bond</a></li>
