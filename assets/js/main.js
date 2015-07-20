@@ -103,9 +103,9 @@
 		newMoleculeSimulation (moleculeExamples, $('#moleculeExample').val().trim());
 	};
 
-	$.getJSON("molecules.json", function(json) {
+	$.getJSON("floors.json", function(json) {
     moleculeExamples = json;
-    newMoleculeSimulation (moleculeExamples, '2-amino-propanoic_acid');
+    newMoleculeSimulation (moleculeExamples, '1LDK');
 	});
 
 	var orgoShmorgo = function(graph) {
@@ -158,7 +158,7 @@
 			// Add node circle
 			d3.select(g)
 				.append("circle")
-				.attr("r", function(d) { return radius(d.size); })
+				.attr("r", function(d) { return radius(d.size*2); })
 				.style("fill", function(d) { return color(d.symbol); });
 
 			// Add atom symbol
