@@ -249,86 +249,86 @@
 			});
 		}; // window.saveMolecule = function ()
 
-		window.changeBond = function (newBondType) {
-			if (!bondSelected) {
-				Messenger().post({
-					message: 'No Bond Selected',
-					type: 'error',
-					showCloseButton: true
-				});
-				return;
-			}
-			var bondData = getAtomData(bondSelected);
-			var changeInCharge = newBondType - bondData.bondType;
-			var bondChangePossible = function (bond) {
-				return (bond.target.bonds + changeInCharge <= atomDB[bond.target.symbol].lonePairs && bond.source.bonds + changeInCharge <= atomDB[bond.source.symbol].lonePairs);
-			};
+		// window.changeBond = function (newBondType) {
+		// 	if (!bondSelected) {
+		// 		Messenger().post({
+		// 			message: 'No Bond Selected',
+		// 			type: 'error',
+		// 			showCloseButton: true
+		// 		});
+		// 		return;
+		// 	}
+		// 	var bondData = getAtomData(bondSelected);
+		// 	var changeInCharge = newBondType - bondData.bondType;
+		// 	var bondChangePossible = function (bond) {
+		// 		return (bond.target.bonds + changeInCharge <= atomDB[bond.target.symbol].lonePairs && bond.source.bonds + changeInCharge <= atomDB[bond.source.symbol].lonePairs);
+		// 	};
 
-			if (!newBondType || newBondType < 1 || newBondType > 3) {
-				Messenger().post({
-					message: 'Internal error :(',
-					type: 'error',
-					showCloseButton: true
-				});
-				return;
-			}
-			else if (!bondChangePossible(bondData, newBondType)) {
-				Messenger().post({
-					message: 'That type of bond cannot exist there!',
-					type: 'error',
-					showCloseButton: true
-				});
-				return;
-			}
+		// 	if (!newBondType || newBondType < 1 || newBondType > 3) {
+		// 		Messenger().post({
+		// 			message: 'Internal error :(',
+		// 			type: 'error',
+		// 			showCloseButton: true
+		// 		});
+		// 		return;
+		// 	}
+		// 	else if (!bondChangePossible(bondData, newBondType)) {
+		// 		Messenger().post({
+		// 			message: 'That type of bond cannot exist there!',
+		// 			type: 'error',
+		// 			showCloseButton: true
+		// 		});
+		// 		return;
+		// 	}
 
-			for (var i = links.length - 1; i >= 0; i--) {
-				if (links[i].id === bondData.id) {
-					var changeInCharge = newBondType - bondData.bondType;
-					var source = retriveAtom(links[i].source.id),
-							target = retriveAtom(links[i].target.id);
-					if (changeInCharge === 2) {
-						removeHydrogen(source);
-						removeHydrogen(source);
-						removeHydrogen(target);
-						removeHydrogen(target);
-					}
-					else if (changeInCharge === 1) {
-						removeHydrogen(source);
-						removeHydrogen(target);
-					}
-					else if (changeInCharge === -1) {
-						addHydrogens(source, 1);
-						addHydrogens(target, 1);
-					}
-					else if (changeInCharge === -2) {
-						addHydrogens(source, 1);
-						addHydrogens(source, 1);
-						addHydrogens(target, 1);
-						addHydrogens(target, 1);
-					}
-					source.bonds += changeInCharge;
-					target.bonds += changeInCharge;
+		// 	for (var i = links.length - 1; i >= 0; i--) {
+		// 		if (links[i].id === bondData.id) {
+		// 			var changeInCharge = newBondType - bondData.bondType;
+		// 			var source = retriveAtom(links[i].source.id),
+		// 					target = retriveAtom(links[i].target.id);
+		// 			if (changeInCharge === 2) {
+		// 				removeHydrogen(source);
+		// 				removeHydrogen(source);
+		// 				removeHydrogen(target);
+		// 				removeHydrogen(target);
+		// 			}
+		// 			else if (changeInCharge === 1) {
+		// 				removeHydrogen(source);
+		// 				removeHydrogen(target);
+		// 			}
+		// 			else if (changeInCharge === -1) {
+		// 				addHydrogens(source, 1);
+		// 				addHydrogens(target, 1);
+		// 			}
+		// 			else if (changeInCharge === -2) {
+		// 				addHydrogens(source, 1);
+		// 				addHydrogens(source, 1);
+		// 				addHydrogens(target, 1);
+		// 				addHydrogens(target, 1);
+		// 			}
+		// 			source.bonds += changeInCharge;
+		// 			target.bonds += changeInCharge;
 
-					// Remove old bond, create new one and add it to links list
-					// Simple change of bond value is buggy
-					links.splice(i, 1);
-					var newBond = {
-						source: bondData.source,
-						target: bondData.target,
-						bondType: newBondType,
-						id: generateRandomID()
-					};
-					links.push(newBond);
+		// 			// Remove old bond, create new one and add it to links list
+		// 			// Simple change of bond value is buggy
+		// 			links.splice(i, 1);
+		// 			var newBond = {
+		// 				source: bondData.source,
+		// 				target: bondData.target,
+		// 				bondType: newBondType,
+		// 				id: generateRandomID()
+		// 			};
+		// 			links.push(newBond);
 
-					// Clear previous bond selection
-					bondSelected.style("filter", "");
-					bondSelected = null;
+		// 			// Clear previous bond selection
+		// 			bondSelected.style("filter", "");
+		// 			bondSelected = null;
 
-					break;
-				} // if (links[i].id === bondData.id)
-			} // for (var i = links.length - 1; i >= 0; i--)
-			buildMolecule();
-		}; // window.changeBond = function (newBondType)
+		// 			break;
+		// 		} // if (links[i].id === bondData.id)
+		// 	} // for (var i = links.length - 1; i >= 0; i--)
+		// 	buildMolecule();
+		// }; // window.changeBond = function (newBondType)
 
 		window.changeAtomSize = function (sizeDiff) {
 			if (!atomSelected) {
