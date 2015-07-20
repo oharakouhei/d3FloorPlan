@@ -405,7 +405,7 @@
 						var nonHydrogenAtom = bondsArr[i].target.id !== id ? 'target' : 'source';
 
 						bondsArr[i][nonHydrogenAtom].bonds -= bondsArr[i].bondType;
-						addHydrogens(bondsArr[i][nonHydrogenAtom], bondsArr[i].bondType);
+						// addHydrogens(bondsArr[i][nonHydrogenAtom], bondsArr[i].bondType);
 				}
 				// Convert atom obj to id for later processing
 				bondsArr[i] = bondsArr[i].id;
@@ -471,15 +471,15 @@
 		}
 
 		window.deleteAtom = function () {
-			var oneNonHydrogenBond = function (atom) {
-				var atomBonds = getBonds(atom.id);
-				var counter = 0;
-				for (var i = atomBonds.length - 1; i >= 0; i--) {
-					if (atomBonds[i].source.symbol !== 'H' && atomBonds[i].target.symbol !== 'H')
-						counter++;
-				}
-				return counter === 1;
-			};
+			// var oneNonHydrogenBond = function (atom) {
+			// 	var atomBonds = getBonds(atom.id);
+			// 	var counter = 0;
+			// 	for (var i = atomBonds.length - 1; i >= 0; i--) {
+			// 		if (atomBonds[i].source.symbol !== 'H' && atomBonds[i].target.symbol !== 'H')
+			// 			counter++;
+			// 	}
+			// 	return counter === 1;
+			// };
 
 			if (!atomSelected) {
 				Messenger().post({
@@ -489,14 +489,14 @@
 				});
 				return;
 			}
-			else if (!oneNonHydrogenBond(getAtomData(atomSelected))) {
-				Messenger().post({
-				  message: 'Atom Must have only one non-hydrogen bond to be removed',
-				  type: 'error',
-				  showCloseButton: true
-				});
-				return;
-			}
+			// else if (!oneNonHydrogenBond(getAtomData(atomSelected))) {
+			// 	Messenger().post({
+			// 	  message: 'Atom Must have only one non-hydrogen bond to be removed',
+			// 	  type: 'error',
+			// 	  showCloseButton: true
+			// 	});
+			// 	return;
+			// }
 
 			removeAtom(getAtomData(atomSelected).id);
 			atomSelected = null;
