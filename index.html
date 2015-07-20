@@ -29,20 +29,20 @@
 						<div class="input-group">
 					   <!-- <input type="text" disabled style="background-color: #fff; cursor: auto;" placeholder="Carbon Name" class="form-control">
 					      	<span class="input-group-btn">
-					    		<button style="padding-left:5px" class="btn btn-default" onclick="loadMoleculeExample()" type="button">Load Molecule</button>
+					    		<button style="padding-left:5px" class="btn btn-default" onclick="loadFloorPlanExample()" type="button">Load FloorPlan</button>
 					    	</span> -->
-						    <select id="moleculeExample" class="form-control">
+						    <select id="floorPlanExample" class="form-control">
 							    <option selected value="1LDK">1LDK</option>
 							</select>
 							<span class="input-group-btn">
-					    		<button style="margin-left: 5px; margin-right:210px" class="btn btn-default" onclick="loadMoleculeExample()" type="button">Load Molecule</button>
+					    		<button style="margin-left: 5px; margin-right:210px" class="btn btn-default" onclick="loadFloorPlanExample()" type="button">Load FloorPlan</button>
 					    	</span>
 					    </div><!-- /input-group -->
 					</div>
 					<div class="col-md-4">
 						<div class="text-right">
-							<button type="button" onclick="saveMolecule()" class="btn btn-info">Save Molecule </button>
-							<button type="button" onclick="loadMolecule()" class="btn btn-info">Load Molecule </button>
+							<button type="button" onclick="saveFloorPlan()" class="btn btn-info">Save FloorPlan </button>
+							<button type="button" onclick="loadFloorPlan()" class="btn btn-info">Load FloorPlan </button>
 						</div>
 					</div>
 				</div>
@@ -50,38 +50,38 @@
 					<div class="col-md-6">
 						<div class="btn-group">
 						  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-						    Add Atom <span class="caret"></span>
+						    Add Room <span class="caret"></span>
 						  </button>
 						  <ul class="dropdown-menu" role="menu">
-						    <li><a href="#" onclick="addAtom('L')">Living (L)</a></li>
-						    <li><a href="#" onclick="addAtom('D')">Dining (D)</a></li>
-						    <li><a href="#" onclick="addAtom('K')">Kitchen (K)</a></li>
-						    <li><a href="#" onclick="addAtom('R')">Room (R)</a></li>
-						    <li><a href="#" onclick="addAtom('R')">Bath (B)</a></li>
-						    <li><a href="#" onclick="addAtom('WC')">Unit Bath (UB)</a></li>
-						    <li><a href="#" onclick="addAtom('WC')">Powder Room (PR)</a></li>
-						    <li><a href="#" onclick="addAtom('WC')">Water Closet (WC)</a></li>
-						    <li><a href="#" onclick="addAtom('E')">Entrance (E)</a></li>
-						    <li><a href="#" onclick="addAtom('P')">Passage (P)</a></li>
+						    <li><a href="#" onclick="addRoom('L')">Living (L)</a></li>
+						    <li><a href="#" onclick="addRoom('D')">Dining (D)</a></li>
+						    <li><a href="#" onclick="addRoom('K')">Kitchen (K)</a></li>
+						    <li><a href="#" onclick="addRoom('R')">Room (R)</a></li>
+						    <li><a href="#" onclick="addRoom('R')">Bath (B)</a></li>
+						    <li><a href="#" onclick="addRoom('WC')">Unit Bath (UB)</a></li>
+						    <li><a href="#" onclick="addRoom('WC')">Powder Room (PR)</a></li>
+						    <li><a href="#" onclick="addRoom('WC')">Water Closet (WC)</a></li>
+						    <li><a href="#" onclick="addRoom('E')">Entrance (E)</a></li>
+						    <li><a href="#" onclick="addRoom('P')">Passage (P)</a></li>
 						  </ul>
 						</div>
 						<div class="btn-group">
 						  <button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
-						    Change Atom Size <span class="caret"></span>
+						    Change Room Size <span class="caret"></span>
 						  </button>
 						  <ul class="dropdown-menu" role="menu">
-						    <li><a href="#" onclick="changeAtomSize(1)">+1</a></li>
-						    <li><a href="#" onclick="changeAtomSize(-1)">-1</a></li>
+						    <li><a href="#" onclick="changeRoomSize(1)">+1</a></li>
+						    <li><a href="#" onclick="changeRoomSize(-1)">-1</a></li>
 						  </ul>
 						</div>
-						<button type="button" onclick="deleteAtom()" class="btn btn-danger">Delete Atom </button>
+						<button type="button" onclick="deleteRoom()" class="btn btn-danger">Delete Room </button>
 					</div>
 					<div class="col-md-4">
 
 					</div>
 				</div>
 			</div>
-			<div id="moleculeDisplay" style="border: 1px solid black; background-color: #FFF" class="row"></div>
+			<div id="floorPlanDisplay" style="border: 1px solid black; background-color: #FFF" class="row"></div>
 		</div>
 
 		<div>
@@ -106,7 +106,7 @@
 		<script>vex.defaultOptions.className = 'vex-theme-default';</script>
 		<script type="text/javascript" src="assets/libs/d3/d3.v3.min.js"></script>
 		<script type="text/javascript" src="assets/libs/glow.js"></script>
-		<script type="text/javascript" src="assets/js/atomDB.js"></script>
+		<script type="text/javascript" src="assets/js/roomDB.js"></script>
 		<script type="text/javascript" src="assets/js/main.js"></script>
 	</body>
 </html>

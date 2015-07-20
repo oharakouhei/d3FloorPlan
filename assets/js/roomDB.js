@@ -1,69 +1,69 @@
-var atomDB = {};
+var roomDB = {};
 
-atomDB ['L'] = {
+roomDB ['L'] = {
 	name: 'Living',
 	symbol: 'L',
 	lonePairs: 4,
 	size: 8
 };
 
-atomDB ['D'] = {
+roomDB ['D'] = {
 	name: 'Dining',
 	symbol: 'D',
 	lonePairs: 2,
 	size: 7
 };
 
-atomDB ['K'] = {
+roomDB ['K'] = {
 	name: 'Kitchen',
 	symbol: 'K',
 	lonePairs: 3,
 	size: 4
 };
 
-atomDB ['R'] = {
+roomDB ['R'] = {
 	name: 'Room',
 	symbol: 'R',
 	lonePairs: 1,
 	size: 6
 };
 
-atomDB ['B'] = {
+roomDB ['B'] = {
 	name: 'Bath',
 	symbol: 'B',
 	lonePairs: 1,
 	size: 4
 };
 
-atomDB ['UB'] = {
+roomDB ['UB'] = {
 	name: 'Unit Bath',
 	symbol: 'UB',
 	lonePairs: 1,
 	size: 5
 };
 
-atomDB ['PR'] = {
+roomDB ['PR'] = {
 	name: 'Powder Room',
 	symbol: 'PR',
 	lonePairs: 1,
 	size: 4
 };
 
-atomDB ['WC'] = {
+roomDB ['WC'] = {
 	name: 'Water Closet',
 	symbol: 'WC',
 	lonePairs: 1,
 	size: 3
 };
 
-atomDB ['E'] = {
+roomDB ['E'] = {
 	name: 'Entrance',
 	symbol: 'E',
 	lonePairs: 1,
 	size: 3
 };
 
-atomDB ['P'] = {
+roomDB ['P'] = {
 	name: 'Passage',
 	symbol: 'P',
 	lonePairs: 1,

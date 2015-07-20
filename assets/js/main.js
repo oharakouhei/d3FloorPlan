@@ -6,21 +6,21 @@
 
 	var color = d3.scale.category20();
 
-	var moleculeExamples = {};
+	var floorPlanExamples = {};
 
 	var radius = d3.scale.sqrt()
 	    .range([0, 6]);
 
 	var selectionGlove = glow("selectionGlove").rgb("#0000A0").stdDeviation(7);
-	var atomSelected;
-	var atomClicked = function (dataPoint) {
+	var roomSelected;
+	var roomClicked = function (dataPoint) {
 		// if (dataPoint.symbol === "H")
 		// return;
 
-		if (atomSelected)
-			atomSelected.style("filter", "");
+		if (roomSelected)
+			roomSelected.style("filter", "");
 
-		atomSelected = d3.select(this)
+		roomSelected = d3.select(this)
 							.select("circle")
 	 						.style("filter", "url(#selectionGlove)");
 	};
@@ -49,7 +49,7 @@
 		});
 	}
 
-	var svg = d3.select("#moleculeDisplay")
+	var svg = d3.select("#floorPlanDisplay")
 				.append("svg")
 				.attr("width", width)
 				.attr("height", height)
@@ -59,10 +59,10 @@
 	  return Math.floor(Math.random() * (max - min + 1) + min);
 	}
 
-	window.loadMolecule = function () {
+	window.loadFloorPlan = function () {
 		vex.dialog.open({
-				message: 'Copy your saved molecule data:',
-				input: "Molecule: <br/>\n<textarea id=\"molecule\" name=\"molecule\" value=\"\" style=\"height:150px\" placeholder=\"Saved Molecule Data\" required></textarea>",
+				message: 'Copy your saved floor plan data:',
+				input: "FloorPlan: <br/>\n<textarea id=\"floor plan\" name=\"floor plan\" value=\"\" style=\"height:150px\" placeholder=\"Saved FloorPlan Data\" required></textarea>",
 				buttons: [
 					$.extend({}, vex.dialog.buttons.YES, {
 					text: 'Load'
@@ -73,39 +73,39 @@
 				callback: function(data) {
 					if (data !== false) {
 
-						newMoleculeSimulation(JSON.parse(data.molecule));
+						newFloorPlanSimulation(JSON.parse(data.floorPlan));
 					}
 				}
 			});
 	};
 
-	var newMoleculeSimulation = function (newMolecule, example) {
+	var newFloorPlanSimulation = function (newFloorPlan, example) {
 		// Might be super dirty, but it works!
-		$('#moleculeDisplay').empty();
-		svg = d3.select("#moleculeDisplay").append("svg")
+		$('#floorPlanDisplay').empty();
+		svg = d3.select("#floorPlanDisplay").append("svg")
 					.attr("width", width)
 					.attr("height", height)
 					.call(selectionGlove);
 		if (example)
-			newMolecule = newMolecule[example];
-		newMolecule = $.extend(true, {}, newMolecule);
-		orgoShmorgo(newMolecule);
+			newFloorPlan = newFloorPlan[example];
+		newFloorPlan = $.extend(true, {}, newFloorPlan);
+		orgoShmorgo(newFloorPlan);
 
 		Messenger().post({
-			message: 'New Molecule Loaded',
+			message: 'New FloorPlan Loaded',
 			type: 'success',
 			showCloseButton: true,
 			hideAfter: 2
 		});
 	};
 
-	window.loadMoleculeExample = function () {
-		newMoleculeSimulation (moleculeExamples, $('#moleculeExample').val().trim());
+	window.loadFloorPlanExample = function () {
+		newFloorPlanSimulation (floorPlanExamples, $('#floorPlanExample').val().trim());
 	};
 
 	$.getJSON("floors.json", function(json) {
-    moleculeExamples = json;
-    newMoleculeSimulation (moleculeExamples, '1LDK');
+    floorPlanExamples = json;
+    newFloorPlanSimulation (floorPlanExamples, '1LDK');
 	});
 
 	var orgoShmorgo = function(graph) {
@@ -128,7 +128,7 @@
 			link = svg.selectAll(".link"),
 			node = svg.selectAll(".node");
 
-		buildMolecule();
+		buildFloorPlan();
 
 		// update g tag element of line
 		function updateLineGElement (g) {
@@ -161,23 +161,23 @@
 				.attr("r", function(d) { return radius(d.size*2); })
 				.style("fill", function(d) { return color(d.symbol); });
 
-			// Add atom symbol
+			// Add room symbol
 			d3.select(g)
 				.append("text")
 				.attr("dy", ".35em")
 				.attr("text-anchor", "middle")
 				.text(function(d) { return d.symbol + d.size; });
 
-			// Give atom the power to be selected
+			// Give room the power to be selected
 			d3.select(g)
-				.on("click", atomClicked);
+				.on("click", roomClicked);
 
-			// Grant atom the power of gravity
+			// Grant room the power of gravity
 			d3.select(g)
 				.call(force.drag);
 		}; // function updateNodeGElement (g)
 
-		function buildMolecule () {
+		function buildFloorPlan () {
 			// Update link data
 			link = link.data(links, function (d) {return d.id; });
 
@@ -212,7 +212,7 @@
 			force.start();
 		} // buildModule()
 
-		window.saveMolecule = function () {
+		window.saveFloorPlan = function () {
 			var specialLinks = [], specialNodes = [], nodeIdArr = [];
 			for (var i = nodes.length - 1; i >=0; i--) {
 				specialNodes.push({
@@ -233,13 +233,13 @@
 						bondType: links[i].bondType
 				});
 			}
-			molecule = {
+			floorPlan = {
 				nodes: specialNodes,
 				links: specialLinks
 			};
 			vex.dialog.open({
-				message: 'To save your current molecule, copy the data below. Next time you visit click on the load molecule and input your saved data:',
-				input: "Molecule: <br/>\n<textarea id=\"atoms\" name=\"atoms\" value=\"\" style=\"height:150px\" placeholder=\"Molecule Data\">" + JSON.stringify(molecule) + "</textarea>",
+				message: 'To save your current floor plan, copy the data below. Next time you visit click on the load floor plan and input your saved data:',
+				input: "FloorPlan: <br/>\n<textarea id=\"rooms\" name=\"rooms\" value=\"\" style=\"height:150px\" placeholder=\"FloorPlan Data\">" + JSON.stringify(floorPlan) + "</textarea>",
 				buttons: [
 					$.extend({}, vex.dialog.buttons.YES, {
 						text: 'Ok'
@@ -247,7 +247,7 @@
 				],
 				callback: function(data) {}
 			});
-		}; // window.saveMolecule = function ()
+		}; // window.saveFloorPlan = function ()
 
 		// window.changeBond = function (newBondType) {
 		// 	if (!bondSelected) {
@@ -258,10 +258,10 @@
 		// 		});
 		// 		return;
 		// 	}
-		// 	var bondData = getAtomData(bondSelected);
+		// 	var bondData = getRoomData(bondSelected);
 		// 	var changeInCharge = newBondType - bondData.bondType;
 		// 	var bondChangePossible = function (bond) {
-		// 		return (bond.target.bonds + changeInCharge <= atomDB[bond.target.symbol].lonePairs && bond.source.bonds + changeInCharge <= atomDB[bond.source.symbol].lonePairs);
+		// 		return (bond.target.bonds + changeInCharge <= roomDB[bond.target.symbol].lonePairs && bond.source.bonds + changeInCharge <= roomDB[bond.source.symbol].lonePairs);
 		// 	};
 
 		// 	if (!newBondType || newBondType < 1 || newBondType > 3) {
@@ -284,8 +284,8 @@
 		// 	for (var i = links.length - 1; i >= 0; i--) {
 		// 		if (links[i].id === bondData.id) {
 		// 			var changeInCharge = newBondType - bondData.bondType;
-		// 			var source = retriveAtom(links[i].source.id),
-		// 					target = retriveAtom(links[i].target.id);
+		// 			var source = retriveRoom(links[i].source.id),
+		// 					target = retriveRoom(links[i].target.id);
 		// 			if (changeInCharge === 2) {
 		// 				removeHydrogen(source);
 		// 				removeHydrogen(source);
@@ -327,21 +327,21 @@
 		// 			break;
 		// 		} // if (links[i].id === bondData.id)
 		// 	} // for (var i = links.length - 1; i >= 0; i--)
-		// 	buildMolecule();
+		// 	buildFloorPlan();
 		// }; // window.changeBond = function (newBondType)
 
-		window.changeAtomSize = function (sizeDiff) {
-			if (!atomSelected) {
+		window.changeRoomSize = function (sizeDiff) {
+			if (!roomSelected) {
 				Messenger().post({
-					message: 'No Atom Selected',
+					message: 'No Room Selected',
 					type: 'error',
 					showCloseButton: true
 				});
 				return;
 			}
-			var atomData = getAtomData(atomSelected);
-			var changeAtomSizePossible = function (atom) {
-				return (0 < atom.size + sizeDiff);
+			var roomData = getRoomData(roomSelected);
+			var changeRoomSizePossible = function (room) {
+				return (0 < room.size + sizeDiff);
 			};
 
 			if (!sizeDiff || ( -1 != sizeDiff && 1 != sizeDiff)) {
@@ -352,21 +352,21 @@
 				});
 				return;
 			}
-			else if (!changeAtomSizePossible(atomData)) {
+			else if (!changeRoomSizePossible(roomData)) {
 				Messenger().post({
-					message: 'Atom size cannot be 0 and less!',
+					message: 'Room size cannot be 0 and less!',
 					type: 'error',
 					showCloseButton: true
 				});
 				return;
 			}
-			nodes[atomData.id - 1].size += sizeDiff;
-			updateNodeGElement("#node_"+atomData.id);
-			buildMolecule();
-		}; // window.changeAtomSize = function (sizeDiff)
+			nodes[roomData.id - 1].size += sizeDiff;
+			updateNodeGElement("#node_"+roomData.id);
+			buildFloorPlan();
+		}; // window.changeRoomSize = function (sizeDiff)
 
-		window.addAtom = function (atomType) {
-			if (!atomType) {
+		window.addRoom = function (roomType) {
+			if (!roomType) {
 				Messenger().post({
 					message: 'Internal error :(',
 					type: 'error',
@@ -374,42 +374,42 @@
 				});
 				return;
 			}
-			else if (!atomSelected) {
+			else if (!roomSelected) {
 				Messenger().post({
-					message: 'No Atom Selected',
+					message: 'No Room Selected',
 					type: 'error',
 					showCloseButton: true
 				});
 				return;
 			}
-			// else if (!canHaveNewBond(getAtomData(atomSelected))) {
+			// else if (!canHaveNewBond(getRoomData(roomSelected))) {
 			// 	Messenger().post({
-			// 	  message: 'Atom Can\'t Take Anymore Bonds',
+			// 	  message: 'Room Can\'t Take Anymore Bonds',
 			// 	  type: 'error',
 			// 	  showCloseButton: true
 			// 	});
 			// }
 			else
-				addNewAtom(atomType, atomDB[atomType].size);
-		}; // window.addAtom = function (atomType)
+				addNewRoom(roomType, roomDB[roomType].size);
+		}; // window.addRoom = function (roomType)
 
-		// function canHaveNewBond (atom) {
-		// 	return atom.bonds < atomDB[atom.symbol].lonePairs;
+		// function canHaveNewBond (room) {
+		// 	return room.bonds < roomDB[room.symbol].lonePairs;
 		// }
 
-		function getAtomData (d3Atom) {
-			return d3Atom[0][0].parentNode.__data__;
+		function getRoomData (d3Room) {
+			return d3Room[0][0].parentNode.__data__;
 		}
 
-		// function addHydrogens (atom, numHydrogens) {
+		// function addHydrogens (room, numHydrogens) {
 		// 	var newHydrogen = function () {
 		// 		return {
 		// 			symbol: 'H',
 		// 			size: '1',
 		// 			bonds: 1,
 		// 			id: generateRandomID (),
-		// 			x: atom.x + getRandomInt (-15, 15),
-		// 			y: atom.y + getRandomInt (-15, 15)
+		// 			x: room.x + getRandomInt (-15, 15),
+		// 			y: room.y + getRandomInt (-15, 15)
 		// 		};
 		// 	};
 		// 	var tempHydrogen;
@@ -417,47 +417,47 @@
 		// 		tempHydrogen = newHydrogen();
 		// 		nodes.push(tempHydrogen);
 		// 		links.push({
-		// 			source: atom,
+		// 			source: room,
 		// 			target: tempHydrogen,
 		// 			bondType: 1,
 		// 			id: generateRandomID()
 		// 		});
 		// 	}
-		// } // function addHydrogens (atom, numHydrogens)
+		// } // function addHydrogens (room, numHydrogens)
 
-		// function removeHydrogen (oldAtom) {
-		// 	var target, source, bondsArr = getBonds(oldAtom.id);
+		// function removeHydrogen (oldRoom) {
+		// 	var target, source, bondsArr = getBonds(oldRoom.id);
 		// 	for (var i = bondsArr.length - 1; i >= 0; i--) {
 		// 		target = bondsArr[i].target, source = bondsArr[i].source;
 		// 		if (target.symbol === 'H' || source.symbol === 'H' ) {
 		// 			var hydroId = source.symbol === 'H'?
 		// 																source.id:
 		// 																target.id;
-		// 			removeAtom(hydroId);
+		// 			removeRoom(hydroId);
 		// 			return;
 		// 		}
 		// 	}
 		// }
 
-		function removeAtom (id) {
-			var atomToRemove = retriveAtom(id);
+		function removeRoom (id) {
+			var roomToRemove = retriveRoom(id);
 			var bondsArr = getBonds(id);
-			var atomsArr = [atomToRemove.id];
+			var roomsArr = [roomToRemove.id];
 
 			for (var i = bondsArr.length - 1; i >= 0; i--) {
-				// Add atom that is a hydrogen
+				// Add room that is a hydrogen
 				if (bondsArr[i].source.symbol === 'H')
-					atomsArr.push(bondsArr[i].source.id);
+					roomsArr.push(bondsArr[i].source.id);
 				else if (bondsArr[i].target.symbol === 'H')
-					atomsArr.push(bondsArr[i].target.id);
+					roomsArr.push(bondsArr[i].target.id);
 				else {
-						// Give non-hydrogen bonded atom it's lone pairs back
-						var nonHydrogenAtom = bondsArr[i].target.id !== id ? 'target' : 'source';
+						// Give non-hydrogen bonded room it's lone pairs back
+						var nonHydrogenRoom = bondsArr[i].target.id !== id ? 'target' : 'source';
 
-						bondsArr[i][nonHydrogenAtom].bonds -= bondsArr[i].bondType;
-						// addHydrogens(bondsArr[i][nonHydrogenAtom], bondsArr[i].bondType);
+						bondsArr[i][nonHydrogenRoom].bonds -= bondsArr[i].bondType;
+						// addHydrogens(bondsArr[i][nonHydrogenRoom], bondsArr[i].bondType);
 				}
-				// Convert atom obj to id for later processing
+				// Convert room obj to id for later processing
 				bondsArr[i] = bondsArr[i].id;
 			} // for (var i = bondsArr.length - 1; i >= 0; i--)
 
@@ -470,88 +470,88 @@
 				return arr;
 			};
 
-			// Remove atoms marked
-			nodes = spliceOut (nodes, atomsArr);
+			// Remove rooms marked
+			nodes = spliceOut (nodes, roomsArr);
 
 			// Remove bonds marked
 			links = spliceOut (links, bondsArr);
 
-		}; // function removeAtom (id)
+		}; // function removeRoom (id)
 
-		var retriveAtom = function  (atomID) {
+		var retriveRoom = function  (roomID) {
 			for (var i = nodes.length - 1; i >= 0; i--) {
-				if (nodes[i].id === atomID)
+				if (nodes[i].id === roomID)
 					return nodes[i];
 			}
 			return null;
 		};
 
-		function addNewAtom (atomType, atomSize) {
-			var newAtom = {
-						symbol: atomType,
-						size: atomSize,
-						x: getAtomData(atomSelected).x + getRandomInt (-15, 15),
-						y: getAtomData(atomSelected).y + getRandomInt (-15, 15),
+		function addNewRoom (roomType, roomSize) {
+			var newRoom = {
+						symbol: roomType,
+						size: roomSize,
+						x: getRoomData(roomSelected).x + getRandomInt (-15, 15),
+						y: getRoomData(roomSelected).y + getRandomInt (-15, 15),
 						id: generateRandomID (), // Need to make sure is unique
 						bonds: 1
 					},
-			n = nodes.push(newAtom);
+			n = nodes.push(newRoom);
 
-			getAtomData(atomSelected).bonds++; // Increment bond count on selected atom
-			// addHydrogens(newAtom, atomDB[atomType].lonePairs - 1); // Adds hydrogens to new atom
-			// removeHydrogen(getAtomData(atomSelected)); // Remove hydrogen from selected atom
+			getRoomData(roomSelected).bonds++; // Increment bond count on selected room
+			// addHydrogens(newRoom, roomDB[roomType].lonePairs - 1); // Adds hydrogens to new room
+			// removeHydrogen(getRoomData(roomSelected)); // Remove hydrogen from selected room
 
 			links.push({
-				source: newAtom,
-				target: getAtomData(atomSelected),
+				source: newRoom,
+				target: getRoomData(roomSelected),
 				bondType: 1,
 				id: generateRandomID()
 			}); // Need to make sure is unique
 
-			buildMolecule();
-		} // function addNewAtom (atomType, atomSize)
+			buildFloorPlan();
+		} // function addNewRoom (roomType, roomSize)
 
-		var getBonds = function (atomID) {
+		var getBonds = function (roomID) {
 			var arr = [];
 			for (var i = links.length - 1; i >= 0; i--) {
-				if (links[i].source.id === atomID || links[i].target.id === atomID)
+				if (links[i].source.id === roomID || links[i].target.id === roomID)
 					arr.push(links[i]);
 			}
 			return arr;
 		}
 
-		window.deleteAtom = function () {
-			// var oneNonHydrogenBond = function (atom) {
-			// 	var atomBonds = getBonds(atom.id);
+		window.deleteRoom = function () {
+			// var oneNonHydrogenBond = function (room) {
+			// 	var roomBonds = getBonds(room.id);
 			// 	var counter = 0;
-			// 	for (var i = atomBonds.length - 1; i >= 0; i--) {
-			// 		if (atomBonds[i].source.symbol !== 'H' && atomBonds[i].target.symbol !== 'H')
+			// 	for (var i = roomBonds.length - 1; i >= 0; i--) {
+			// 		if (roomBonds[i].source.symbol !== 'H' && roomBonds[i].target.symbol !== 'H')
 			// 			counter++;
 			// 	}
 			// 	return counter === 1;
 			// };
 
-			if (!atomSelected) {
+			if (!roomSelected) {
 				Messenger().post({
-					message: 'No Atom Selected',
+					message: 'No Room Selected',
 					type: 'error',
 					showCloseButton: true
 				});
 				return;
 			}
-			// else if (!oneNonHydrogenBond(getAtomData(atomSelected))) {
+			// else if (!oneNonHydrogenBond(getRoomData(roomSelected))) {
 			// 	Messenger().post({
-			// 	  message: 'Atom Must have only one non-hydrogen bond to be removed',
+			// 	  message: 'Room Must have only one non-hydrogen bond to be removed',
 			// 	  type: 'error',
 			// 	  showCloseButton: true
 			// 	});
 			// 	return;
 			// }
 
-			removeAtom(getAtomData(atomSelected).id);
-			atomSelected = null;
-			buildMolecule ();
-		}; // window.deleteAtom = function ()
+			removeRoom(getRoomData(roomSelected).id);
+			roomSelected = null;
+			buildFloorPlan ();
+		}; // window.deleteRoom = function ()
 
 		function tick() {
 			//Update old and new elements
