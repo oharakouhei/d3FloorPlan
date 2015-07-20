@@ -130,51 +130,20 @@
 
 		buildFloorPlan();
 
-		// update g tag element of line
-		function updateLineGElement (g) {
-			// Add bond line
-			d3.select(g)
-				.append("line")
-				.style("stroke-width", function(d) { return (d.bondType * 3 - 2) * 2 + "px"; });
-
-			// If double add second line
-			d3.select(g)
-				.filter(function(d) { return d.bondType >= 2; })
-				.append("line")
-				.style("stroke-width", function(d) { return (d.bondType * 2 - 2) * 2 + "px"; })
-				.attr("class", "double");
-
-			d3.select(g)
-				.filter(function(d) { return d.bondType === 3; }).append("line")
-				.attr("class", "triple");
-
-			// Give bond the power to be selected
-			d3.select(g)
-				.on("click", bondClicked);
-		}; // function updateLineGElement (g)
-
 		// update g tag element of node
 		function updateNodeGElement (g) {
 			// Add node circle
 			d3.select(g)
-				.append("circle")
+				.select("circle") // not append
 				.attr("r", function(d) { return radius(d.size*2); })
 				.style("fill", function(d) { return color(d.symbol); });
 
 			// Add room symbol
 			d3.select(g)
-				.append("text")
+				.select("text")  // not append
 				.attr("dy", ".35em")
 				.attr("text-anchor", "middle")
 				.text(function(d) { return d.symbol + d.size; });
-
-			// Give room the power to be selected
-			d3.select(g)
-				.on("click", roomClicked);
-
-			// Grant room the power of gravity
-			d3.select(g)
-				.call(force.drag);
 		}; // function updateNodeGElement (g)
 
 		function buildFloorPlan () {
@@ -188,7 +157,26 @@
 					// this function is called only when the page is loaded for the first time
 					// Add id
 					d3.select(this).attr("id", "link_" + d.id);
-					updateLineGElement(this);
+					// Add bond line
+					d3.select(this)
+						.append("line")
+						.style("stroke-width", function(d) { return (d.bondType * 3 - 2) * 2 + "px"; });
+
+					// If double add second line
+					d3.select(this)
+						.filter(function(d) { return d.bondType >= 2; })
+						.append("line")
+						.style("stroke-width", function(d) { return (d.bondType * 2 - 2) * 2 + "px"; })
+						.attr("class", "double");
+
+					d3.select(this)
+						.filter(function(d) { return d.bondType === 3; })
+						.append("line")
+						.attr("class", "triple");
+
+					// Give bond the power to be selected
+					d3.select(this)
+						.on("click", bondClicked);
 				});
 
 			// Delete removed links
@@ -203,7 +191,26 @@
 					// this function is called only when the page is loaded for the first time
 					// Add id
 					d3.select(this).attr("id", "node_" + d.id);
-					updateNodeGElement(this);
+					// Add node circle
+					d3.select(this)
+						.append("circle")
+						.attr("r", function(d) { return radius(d.size*2); })
+						.style("fill", function(d) { return color(d.symbol); });
+
+					// Add room symbol
+					d3.select(this)
+						.append("text")
+						.attr("dy", ".35em")
+						.attr("text-anchor", "middle")
+						.text(function(d) { return d.symbol + d.size; });
+
+					// Give room the power to be selected
+					d3.select(this)
+						.on("click", roomClicked);
+
+					// Grant room the power of gravity
+					d3.select(this)
+						.call(force.drag);
 				});
 
 			// Delete removed nodes
