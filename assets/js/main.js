@@ -162,17 +162,17 @@
 						.append("line")
 						.style("stroke-width", function(d) { return (d.bondType * 3 - 2) * 2 + "px"; });
 
-					// If double add second line
-					d3.select(this)
-						.filter(function(d) { return d.bondType >= 2; })
-						.append("line")
-						.style("stroke-width", function(d) { return (d.bondType * 2 - 2) * 2 + "px"; })
-						.attr("class", "double");
+					// // If double add second line
+					// d3.select(this)
+					// 	.filter(function(d) { return d.bondType >= 2; })
+					// 	.append("line")
+					// 	.style("stroke-width", function(d) { return (d.bondType * 2 - 2) * 2 + "px"; })
+					// 	.attr("class", "double");
 
-					d3.select(this)
-						.filter(function(d) { return d.bondType === 3; })
-						.append("line")
-						.attr("class", "triple");
+					// d3.select(this)
+					// 	.filter(function(d) { return d.bondType === 3; })
+					// 	.append("line")
+					// 	.attr("class", "triple");
 
 					// Give bond the power to be selected
 					d3.select(this)
@@ -288,7 +288,6 @@
 			}
 			nodes[roomData.id - 1].size += sizeDiff;
 			updateNodeGElement("#node_"+roomData.id);
-			buildFloorPlan();
 		}; // window.changeRoomSize = function (sizeDiff)
 
 		window.addRoom = function (roomType) {
