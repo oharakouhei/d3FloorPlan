@@ -249,87 +249,6 @@
 			});
 		}; // window.saveFloorPlan = function ()
 
-		// window.changeBond = function (newBondType) {
-		// 	if (!bondSelected) {
-		// 		Messenger().post({
-		// 			message: 'No Bond Selected',
-		// 			type: 'error',
-		// 			showCloseButton: true
-		// 		});
-		// 		return;
-		// 	}
-		// 	var bondData = getRoomData(bondSelected);
-		// 	var changeInCharge = newBondType - bondData.bondType;
-		// 	var bondChangePossible = function (bond) {
-		// 		return (bond.target.bonds + changeInCharge <= roomDB[bond.target.symbol].lonePairs && bond.source.bonds + changeInCharge <= roomDB[bond.source.symbol].lonePairs);
-		// 	};
-
-		// 	if (!newBondType || newBondType < 1 || newBondType > 3) {
-		// 		Messenger().post({
-		// 			message: 'Internal error :(',
-		// 			type: 'error',
-		// 			showCloseButton: true
-		// 		});
-		// 		return;
-		// 	}
-		// 	else if (!bondChangePossible(bondData, newBondType)) {
-		// 		Messenger().post({
-		// 			message: 'That type of bond cannot exist there!',
-		// 			type: 'error',
-		// 			showCloseButton: true
-		// 		});
-		// 		return;
-		// 	}
-
-		// 	for (var i = links.length - 1; i >= 0; i--) {
-		// 		if (links[i].id === bondData.id) {
-		// 			var changeInCharge = newBondType - bondData.bondType;
-		// 			var source = retriveRoom(links[i].source.id),
-		// 					target = retriveRoom(links[i].target.id);
-		// 			if (changeInCharge === 2) {
-		// 				removeHydrogen(source);
-		// 				removeHydrogen(source);
-		// 				removeHydrogen(target);
-		// 				removeHydrogen(target);
-		// 			}
-		// 			else if (changeInCharge === 1) {
-		// 				removeHydrogen(source);
-		// 				removeHydrogen(target);
-		// 			}
-		// 			else if (changeInCharge === -1) {
-		// 				addHydrogens(source, 1);
-		// 				addHydrogens(target, 1);
-		// 			}
-		// 			else if (changeInCharge === -2) {
-		// 				addHydrogens(source, 1);
-		// 				addHydrogens(source, 1);
-		// 				addHydrogens(target, 1);
-		// 				addHydrogens(target, 1);
-		// 			}
-		// 			source.bonds += changeInCharge;
-		// 			target.bonds += changeInCharge;
-
-		// 			// Remove old bond, create new one and add it to links list
-		// 			// Simple change of bond value is buggy
-		// 			links.splice(i, 1);
-		// 			var newBond = {
-		// 				source: bondData.source,
-		// 				target: bondData.target,
-		// 				bondType: newBondType,
-		// 				id: generateRandomID()
-		// 			};
-		// 			links.push(newBond);
-
-		// 			// Clear previous bond selection
-		// 			bondSelected.style("filter", "");
-		// 			bondSelected = null;
-
-		// 			break;
-		// 		} // if (links[i].id === bondData.id)
-		// 	} // for (var i = links.length - 1; i >= 0; i--)
-		// 	buildFloorPlan();
-		// }; // window.changeBond = function (newBondType)
-
 		window.changeRoomSize = function (sizeDiff) {
 			if (!roomSelected) {
 				Messenger().post({
@@ -382,62 +301,13 @@
 				});
 				return;
 			}
-			// else if (!canHaveNewBond(getRoomData(roomSelected))) {
-			// 	Messenger().post({
-			// 	  message: 'Room Can\'t Take Anymore Bonds',
-			// 	  type: 'error',
-			// 	  showCloseButton: true
-			// 	});
-			// }
 			else
 				addNewRoom(roomType, roomDB[roomType].size);
 		}; // window.addRoom = function (roomType)
 
-		// function canHaveNewBond (room) {
-		// 	return room.bonds < roomDB[room.symbol].lonePairs;
-		// }
-
 		function getRoomData (d3Room) {
 			return d3Room[0][0].parentNode.__data__;
 		}
-
-		// function addHydrogens (room, numHydrogens) {
-		// 	var newHydrogen = function () {
-		// 		return {
-		// 			symbol: 'H',
-		// 			size: '1',
-		// 			bonds: 1,
-		// 			id: generateRandomID (),
-		// 			x: room.x + getRandomInt (-15, 15),
-		// 			y: room.y + getRandomInt (-15, 15)
-		// 		};
-		// 	};
-		// 	var tempHydrogen;
-		// 	for (var i = 0; i < numHydrogens; i++) {
-		// 		tempHydrogen = newHydrogen();
-		// 		nodes.push(tempHydrogen);
-		// 		links.push({
-		// 			source: room,
-		// 			target: tempHydrogen,
-		// 			bondType: 1,
-		// 			id: generateRandomID()
-		// 		});
-		// 	}
-		// } // function addHydrogens (room, numHydrogens)
-
-		// function removeHydrogen (oldRoom) {
-		// 	var target, source, bondsArr = getBonds(oldRoom.id);
-		// 	for (var i = bondsArr.length - 1; i >= 0; i--) {
-		// 		target = bondsArr[i].target, source = bondsArr[i].source;
-		// 		if (target.symbol === 'H' || source.symbol === 'H' ) {
-		// 			var hydroId = source.symbol === 'H'?
-		// 																source.id:
-		// 																target.id;
-		// 			removeRoom(hydroId);
-		// 			return;
-		// 		}
-		// 	}
-		// }
 
 		function removeRoom (id) {
 			var roomToRemove = retriveRoom(id);
@@ -498,8 +368,6 @@
 			n = nodes.push(newRoom);
 
 			getRoomData(roomSelected).bonds++; // Increment bond count on selected room
-			// addHydrogens(newRoom, roomDB[roomType].lonePairs - 1); // Adds hydrogens to new room
-			// removeHydrogen(getRoomData(roomSelected)); // Remove hydrogen from selected room
 
 			links.push({
 				source: newRoom,
@@ -521,16 +389,6 @@
 		}
 
 		window.deleteRoom = function () {
-			// var oneNonHydrogenBond = function (room) {
-			// 	var roomBonds = getBonds(room.id);
-			// 	var counter = 0;
-			// 	for (var i = roomBonds.length - 1; i >= 0; i--) {
-			// 		if (roomBonds[i].source.symbol !== 'H' && roomBonds[i].target.symbol !== 'H')
-			// 			counter++;
-			// 	}
-			// 	return counter === 1;
-			// };
-
 			if (!roomSelected) {
 				Messenger().post({
 					message: 'No Room Selected',
@@ -539,14 +397,6 @@
 				});
 				return;
 			}
-			// else if (!oneNonHydrogenBond(getRoomData(roomSelected))) {
-			// 	Messenger().post({
-			// 	  message: 'Room Must have only one non-hydrogen bond to be removed',
-			// 	  type: 'error',
-			// 	  showCloseButton: true
-			// 	});
-			// 	return;
-			// }
 
 			removeRoom(getRoomData(roomSelected).id);
 			roomSelected = null;
