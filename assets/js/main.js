@@ -1,5 +1,3 @@
-
-
 (function () {
 	var width = 1160,
 	    height = 600;
@@ -11,8 +9,14 @@
 	var radius = d3.scale.sqrt()
 	    .range([0, 6]);
 
+	// "normal" or "bond"
+	// when this mode is "bond" and clicking a node, add bond between
+	var selectMode = "normal";
+
 	var selectionGlove = glow("selectionGlove").rgb("#0000A0").stdDeviation(7);
 	var roomSelected;
+	var roomJustBeforeSelected;
+	var orgoShmorgoObj;
 	var roomClicked = function (dataPoint) {
 		// if (dataPoint.symbol === "H")
 		// return;
@@ -22,7 +26,11 @@
 
 		roomSelected = d3.select(this)
 							.select("circle")
-	 						.style("filter", "url(#selectionGlove)");
+							.style("filter", "url(#selectionGlove)");
+
+		if ("bond" == selectMode) {
+			orgoShmorgoObj.addNewBond();
+		}
 	};
 
 	var bondSelected;
@@ -89,7 +97,7 @@
 		if (example)
 			newFloorPlan = newFloorPlan[example];
 		newFloorPlan = $.extend(true, {}, newFloorPlan);
-		orgoShmorgo(newFloorPlan);
+		orgoShmorgoObj = new orgoShmorgo(newFloorPlan);
 
 		Messenger().post({
 			message: 'New FloorPlan Loaded',
@@ -311,6 +319,27 @@
 				addNewRoom(roomType, roomDB[roomType].size);
 		}; // window.addRoom = function (roomType)
 
+		window.Bond = function () {
+			if (!roomSelected) {
+				Messenger().post({
+					message: 'No Room Selected',
+					type: 'error',
+					showCloseButton: true
+				});
+				return;
+			}
+			else {
+				Messenger().post({
+					message: 'Please select bond target.',
+					type: 'info',
+					hideAfter: 3,
+					showCloseButton: true
+				});
+				selectMode = "bond";
+				roomJustBeforeSelected = roomSelected;
+			}
+		}
+
 		function getRoomData (d3Room) {
 			return d3Room[0][0].parentNode.__data__;
 		}
@@ -384,6 +413,39 @@
 
 			buildFloorPlan();
 		} // function addNewRoom (roomType, roomSize)
+
+		this.addNewBond = function () {
+			var roomJustBeforeSelected_id = getRoomData(roomJustBeforeSelected).id;
+			var roomSelected_id = getRoomData(roomSelected).id;
+			// if there have already been a bond
+			for (var i = links.length - 1; i >= 0; i--) {
+				var source_id = links[i].source.id;
+				var target_id = links[i].target.id;
+				console.log(source_id);
+				if ((source_id === roomJustBeforeSelected_id && target_id === roomSelected_id) || (target_id === roomJustBeforeSelected_id && source_id === roomSelected_id)) {
+						Messenger().post({
+							message: 'There have already been a bond. Please push "Bond" button and try again.',
+							type: 'error',
+							hideAfter: 3,
+							showCloseButton: true
+						});
+						selectMode = "normal";
+						return;
+				}
+			}
+
+			getRoomData(roomJustBeforeSelected).bonds++; // Increment bond count on selected room
+
+			links.push({
+				source: getRoomData(roomJustBeforeSelected),
+				target: getRoomData(roomSelected),
+				bondType: 1,
+				id: generateRandomID()
+			}); // Need to make sure is unique
+
+			buildFloorPlan();
+			selectMode = "normal";
+		}
 
 		var getBonds = function (roomID) {
 			var arr = [];
