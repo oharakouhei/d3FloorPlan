@@ -308,12 +308,7 @@
 				return;
 			}
 			else if (!roomSelected) {
-				Messenger().post({
-					message: 'No Room Selected',
-					type: 'error',
-					showCloseButton: true
-				});
-				return;
+				addNewRoom(roomType, roomDB[roomType].size, true);
 			}
 			else
 				addNewRoom(roomType, roomDB[roomType].size);
@@ -399,25 +394,41 @@
 			return null;
 		};
 
-		function addNewRoom (roomType, roomSize) {
-			var newRoom = {
-						symbol: roomType,
-						size: roomSize,
-						x: getRoomData(roomSelected).x + getRandomInt (-15, 15),
-						y: getRoomData(roomSelected).y + getRandomInt (-15, 15),
-						id: generateRandomID (), // Need to make sure is unique
-						bonds: 1
-					},
-			n = nodes.push(newRoom);
+		function addNewRoom (roomType, roomSize, isSeparated) {
+			isSeparated = (null == isSeparated) ? false: isSeparated;
+			if (isSeparated) {
+				var newRoom = {
+							symbol: roomType,
+							size: roomSize,
+							x: width / 3,
+							y: 10,
+							id: generateRandomID (), // Need to make sure is unique
+							bonds: 1
+						},
 
-			getRoomData(roomSelected).bonds++; // Increment bond count on selected room
+				n = nodes.push(newRoom);
+			}
+			else {
+				var newRoom = {
+							symbol: roomType,
+							size: roomSize,
+							x: getRoomData(roomSelected).x + getRandomInt (-15, 15),
+							y: getRoomData(roomSelected).y + getRandomInt (-15, 15),
+							id: generateRandomID (), // Need to make sure is unique
+							bonds: 1
+						},
 
-			links.push({
-				source: newRoom,
-				target: getRoomData(roomSelected),
-				bondType: 1,
-				id: generateRandomID()
-			}); // Need to make sure is unique
+				n = nodes.push(newRoom);
+
+				getRoomData(roomSelected).bonds++; // Increment bond count on selected room
+
+				links.push({
+					source: newRoom,
+					target: getRoomData(roomSelected),
+					bondType: 1,
+					id: generateRandomID()
+				}); // Need to make sure is unique
+			}
 
 			buildFloorPlan();
 		} // function addNewRoom (roomType, roomSize)
@@ -429,7 +440,6 @@
 			for (var i = links.length - 1; i >= 0; i--) {
 				var source_id = links[i].source.id;
 				var target_id = links[i].target.id;
-				console.log(source_id);
 				if ((source_id === roomJustBeforeSelected_id && target_id === roomSelected_id) || (target_id === roomJustBeforeSelected_id && source_id === roomSelected_id)) {
 						Messenger().post({
 							message: 'There have already been a bond. Please push "Bond" button and try again.',
