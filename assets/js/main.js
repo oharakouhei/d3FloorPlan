@@ -19,7 +19,7 @@
 	var orgoShmorgoObj;
 
 	// deselect node and bond when clicking other objects
-	d3.select("body").on("click", function(){
+	d3.select("#floorPlanDisplay").on("click", function(){
 		if (roomSelected)
 			roomSelected.style("filter", "");
 		roomSelected = null;
