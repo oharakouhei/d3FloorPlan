@@ -17,10 +17,17 @@
 	var roomSelected;
 	var roomJustBeforeSelected;
 	var orgoShmorgoObj;
-	var roomClicked = function (dataPoint) {
-		// if (dataPoint.symbol === "H")
-		// return;
 
+	// deselect node and bond when clicking other objects
+	d3.select("body").on("click", function(){
+		if (roomSelected)
+			roomSelected.style("filter", "");
+		roomSelected = null;
+		bondSelected = null;
+	});
+
+	var roomClicked = function (dataPoint) {
+		d3.event.stopPropagation(); // to avoid duplicating click events
 		if (roomSelected)
 			roomSelected.style("filter", "");
 
@@ -439,6 +446,7 @@
 							hideAfter: 3,
 							showCloseButton: true
 						});
+						roomJustBeforeSelected = null;
 						selectMode = "normal";
 						return;
 				}
@@ -454,6 +462,7 @@
 			}); // Need to make sure is unique
 
 			buildFloorPlan();
+			roomJustBeforeSelected = null;
 			selectMode = "normal";
 		}
 
