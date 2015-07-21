@@ -383,6 +383,14 @@
 
 		}; // function removeRoom (id)
 
+		function removeBond (id) {
+			for (var i = links.length - 1; i >= 0; i--) {
+				if (links[i].id === id) {
+					links.splice(i, 1);
+				}
+			}
+		}; // function removeBond (id)
+
 		var retriveRoom = function  (roomID) {
 			for (var i = nodes.length - 1; i >= 0; i--) {
 				if (nodes[i].id === roomID)
@@ -470,6 +478,21 @@
 			roomSelected = null;
 			buildFloorPlan ();
 		}; // window.deleteRoom = function ()
+
+		window.deleteBond = function () {
+			if (!bondSelected) {
+				Messenger().post({
+					message: 'No Bond Selected',
+					type: 'error',
+					showCloseButton: true
+				});
+				return;
+			}
+			removeBond(getRoomData(bondSelected).id);
+			bondSelected = null;
+			buildFloorPlan ();
+		}; // window.deleteBond = function ()
+
 
 		function tick() {
 			//Update old and new elements

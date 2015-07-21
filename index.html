@@ -48,7 +48,7 @@
 					</div>
 				</div>
 				<div style="margin-top: 10px; margin-bottom: 10px" class="row">
-					<div class="col-md-6">
+					<div class="col-md-8">
 						<div class="btn-group">
 						  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
 						    Add Room <span class="caret"></span>
@@ -68,13 +68,14 @@
 						    <li><a href="#" onclick="addRoom('P')">Passage (P)</a></li>
 						  </ul>
 						</div>
+						<button type="button" onclick="Bond()" class="btn btn-info">Add Bond </button>
 						<div class="btn-group">
 						  <a class="btn btn-success" href="#" onclick="changeRoomSize(-1)">-1</a>
 						  <button type="button" class="btn btn-success">Change Room Size</button>
 						  <a class="btn btn-success" href="#" onclick="changeRoomSize(1)">+1</a>
 						</div>
-						<button type="button" onclick="Bond()" class="btn btn-info">Bond </button>
 						<button type="button" onclick="deleteRoom()" class="btn btn-danger">Delete Room </button>
+						<button type="button" onclick="deleteBond()" class="btn btn-danger">Delete Bond </button>
 					</div>
 					<div class="col-md-4">
 
