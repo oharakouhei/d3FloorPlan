@@ -345,18 +345,10 @@
 			var roomsArr = [roomToRemove.id];
 
 			for (var i = bondsArr.length - 1; i >= 0; i--) {
-				// Add room that is a hydrogen
-				if (bondsArr[i].source.symbol === 'H')
-					roomsArr.push(bondsArr[i].source.id);
-				else if (bondsArr[i].target.symbol === 'H')
-					roomsArr.push(bondsArr[i].target.id);
-				else {
-						// Give non-hydrogen bonded room it's lone pairs back
-						var nonHydrogenRoom = bondsArr[i].target.id !== id ? 'target' : 'source';
+				// Give bonded room
+				var bondedRoom = bondsArr[i].target.id !== id ? 'target' : 'source';
 
-						bondsArr[i][nonHydrogenRoom].bonds -= bondsArr[i].bondType;
-						// addHydrogens(bondsArr[i][nonHydrogenRoom], bondsArr[i].bondType);
-				}
+				bondsArr[i][bondedRoom].bonds -= bondsArr[i].bondType;
 				// Convert room obj to id for later processing
 				bondsArr[i] = bondsArr[i].id;
 			} // for (var i = bondsArr.length - 1; i >= 0; i--)
