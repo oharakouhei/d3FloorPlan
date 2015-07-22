@@ -22,6 +22,8 @@
 	d3.select("#floorPlanDisplay").on("click", function(){
 		if (roomSelected)
 			roomSelected.style("filter", "");
+		if (bondSelected)
+			bondSelected.style("filter", "");
 		roomSelected = null;
 		bondSelected = null;
 	});
@@ -42,6 +44,7 @@
 
 	var bondSelected;
 	var bondClicked = function (dataPoint) {
+		d3.event.stopPropagation(); // to avoid duplicating click events
 		Messenger().post({
 			message: 'New Bond Selected',
 			type: 'info',
