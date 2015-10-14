@@ -217,11 +217,11 @@
 
 	$.getJSON("floors.json", function(json) {
 		floorPlanExamples = json;
-		if (null == js_obj_graph_structure) {
+		// if (null == js_obj_graph_structure) {
 			newFloorPlanSimulation (floorPlanExamples, '1LDK');
-		} else {
-			newFloorPlanSimulation (adjacencyListTxt2JSON(js_obj_graph_structure));
-		}
+		// } else {
+			// newFloorPlanSimulation (adjacencyListTxt2JSON(js_obj_graph_structure));
+		// }
 	});
 
 	var orgoShmorgo = function(graph) {
@@ -249,11 +249,11 @@
 		// 以下の1文主観的評価実験用
 		// クエリグラフ送信フォームの<input type="hidden" id="floorPlanExampleName">のvalueを主観的評価実験用カラムのfloorPlanExampleNameのために最初は1LDKに設定.
 		if ($('#floorPlanExampleName')) {
-			if (null == js_obj_floor_plan_example_name) {
+			// if (null == js_obj_floor_plan_example_name) {
 				$('#floorPlanExampleName').attr('value', '1LDK');
-			} else {
-				$('#floorPlanExampleName').attr('value', js_obj_floor_plan_example_name);
-			}
+			// } else {
+				// $('#floorPlanExampleName').attr('value', js_obj_floor_plan_example_name);
+			// }
 		}
 
 		// update g tag element of node
