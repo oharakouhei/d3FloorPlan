@@ -4,7 +4,7 @@
           {"symbol": "LDK", "size": 12, "bonds": 1, "id": 1},
           {"symbol": "R", "size": 6, "bonds": 1, "id": 2},
           {"symbol": "WC", "size": 3, "bonds": 1, "id": 3},
-          {"symbol": "B", "size": 4, "bonds": 1, "id": 4}
+          {"symbol": "Ba", "size": 4, "bonds": 1, "id": 4}
         ],
         "links": [
           {"source": 0, "target": 1,  "bondType": 1, "id": 21},
@@ -19,7 +19,7 @@
           {"symbol": "R", "size": 6, "bonds": 1, "id": 3},
           {"symbol": "PR", "size": 4, "bonds": 1, "id": 4},
           {"symbol": "WC", "size": 3, "bonds": 1, "id": 5},
-          {"symbol": "B", "size": 4, "bonds": 1, "id": 6}
+          {"symbol": "Ba", "size": 4, "bonds": 1, "id": 6}
         ],
         "links": [
           {"source": 0, "target": 1,  "bondType": 1, "id": 21},

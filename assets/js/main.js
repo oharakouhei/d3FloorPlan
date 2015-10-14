@@ -1,8 +1,6 @@
 (function () {
 	var width = 1160,
-	    height = 600;
-
-	var color = d3.scale.category20();
+		height = 600;
 
 	var floorPlanExamples = {};
 
@@ -107,6 +105,10 @@
 		if (example)
 			newFloorPlan = newFloorPlan[example];
 		newFloorPlan = $.extend(true, {}, newFloorPlan);
+		// ノードに色を付ける
+		newFloorPlan['nodes'].forEach(function (data, i) {
+			newFloorPlan['nodes'][i].color = roomDB[data.symbol].color;
+		});
 		orgoShmorgoObj = new orgoShmorgo(newFloorPlan);
 
 		Messenger().post({
@@ -154,7 +156,9 @@
 			d3.select(g)
 				.select("circle") // not append
 				.attr("r", function(d) { return radius(d.size*2); })
-				.style("fill", function(d) { return color(d.symbol); });
+				.style("fill", function(d) {
+ 					return d.color;
+				});
 
 			// Add room symbol
 			d3.select(g)
@@ -213,7 +217,7 @@
 					d3.select(this)
 						.append("circle")
 						.attr("r", function(d) { return radius(d.size*2); })
-						.style("fill", function(d) { return color(d.symbol); });
+						.style("fill", function(d) { return d.color; });
 
 					// Add room symbol
 					d3.select(this)
@@ -245,8 +249,8 @@
 						size: nodes[i].size,
 						x: nodes[i].x,
 						y: nodes[i].y,
-						id: nodes[i].id,
-						bonds: nodes[i].bonds
+						bonds: nodes[i].bonds,
+						id: nodes[i].id
 				});
 				nodeIdArr.push(nodes[i].id);
 			}
@@ -254,8 +258,8 @@
 				specialLinks.push({
 						source: nodeIdArr.indexOf(links[i].source.id),
 						target: nodeIdArr.indexOf(links[i].target.id),
-						id: links[i].id,
-						bondType: links[i].bondType
+						bondType: links[i].bondType,
+						id: links[i].id
 				});
 			}
 			floorPlan = {
@@ -318,10 +322,10 @@
 				return;
 			}
 			else if (!roomSelected) {
-				addNewRoom(roomType, roomDB[roomType].size, true);
+				addNewRoom(roomType, roomDB[roomType], true);
 			}
 			else
-				addNewRoom(roomType, roomDB[roomType].size);
+				addNewRoom(roomType, roomDB[roomType]);
 		}; // window.addRoom = function (roomType)
 
 		window.Bond = function () {
@@ -396,16 +400,17 @@
 			return null;
 		};
 
-		function addNewRoom (roomType, roomSize, isSeparated) {
+		function addNewRoom (roomType, roomDBObj, isSeparated) {
 			isSeparated = (null == isSeparated) ? false: isSeparated;
 			if (isSeparated) {
 				var newRoom = {
 							symbol: roomType,
-							size: roomSize,
+							size: roomDBObj.size,
 							x: width / 3,
 							y: 10,
-							id: generateRandomID (), // Need to make sure is unique
-							bonds: 1
+							bonds: 1,
+							color: roomDBObj.color,
+							id: generateRandomID () // Need to make sure is unique
 						},
 
 				n = nodes.push(newRoom);
@@ -413,11 +418,12 @@
 			else {
 				var newRoom = {
 							symbol: roomType,
-							size: roomSize,
+							size: roomDBObj.size,
 							x: getRoomData(roomSelected).x + getRandomInt (-15, 15),
 							y: getRoomData(roomSelected).y + getRandomInt (-15, 15),
-							id: generateRandomID (), // Need to make sure is unique
-							bonds: 1
+							bonds: 1,
+							color: roomDBObj.color,
+							id: generateRandomID () // Need to make sure is unique
 						},
 
 				n = nodes.push(newRoom);
@@ -433,7 +439,7 @@
 			}
 
 			buildFloorPlan();
-		} // function addNewRoom (roomType, roomSize)
+		} // function addNewRoom (roomType, roomDBObj)
 
 		this.addNewBond = function () {
 			var roomJustBeforeSelected_id = getRoomData(roomJustBeforeSelected).id;
