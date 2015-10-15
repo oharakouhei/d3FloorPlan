@@ -1,6 +1,6 @@
 svg {
   background-color: #FFF;
-  cursor: default;
+  /*cursor: default;*/
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -9,14 +9,14 @@ svg {
 }
 
 svg:not(.active):not(.ctrl) {
-  cursor: crosshair;
+  /*cursor: crosshair;*/
 }
 
 path.link {
   fill: none;
   stroke: #000;
   stroke-width: 4px;
-  cursor: default;
+  /*cursor: default;*/
 }
 
 svg:not(.active):not(.ctrl) path.link {

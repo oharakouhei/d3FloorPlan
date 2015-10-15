@@ -1,13 +1,16 @@
 // set up SVG for D3
-var width  = 960,
-    height = 500,
+var width  = 100,
+    height = 100,
     colors = d3.scale.category10();
 
-var svg = d3.select('body')
+var svg = d3.select('#divDirectedGraphEditor')
   .append('svg')
+  .attr('id', 'svgDirectedGraphEditor')
   .attr('oncontextmenu', 'return false;')
-  .attr('width', width)
-  .attr('height', height);
+  .attr('width', width + '%')
+  .attr('height', height + '%');
+  // .attr("viewBox", "0 0 " + 100 + " " + 100)
+  // .attr("preserveAspectRatio", "xMidYMid meet");
 
 // set up initial nodes and links
 //  - nodes are known by 'id', not by index in array.
@@ -24,11 +27,13 @@ var nodes = [
     {source: nodes[1], target: nodes[2], left: false, right: true }
   ];
 
+var svg_dom = document.getElementById("svgDirectedGraphEditor");
+
 // init D3 force layout
 var force = d3.layout.force()
     .nodes(nodes)
     .links(links)
-    .size([width, height])
+    .size([svg_dom.clientWidth, svg_dom.clientHeight]) // svg領域のwidthとheightをpxでいれる
     .linkDistance(150)
     .charge(-500)
     .on('tick', tick)
