@@ -391,45 +391,48 @@
 		} // buildModule()
 
 		window.saveFloorPlan = function () {
+			console.log('hoge');
 			var specialLinks = [], specialNodes = [], nodeIdArr = [];
 			input_txt = "";
 			edges_arr_for_input_txt = [];
 			for (var i = 0; i < nodes.length; i++) {
-				// specialNodes.push({
-				// 		symbol: nodes[i].symbol,
-				// 		size: nodes[i].size,
-				// 		x: nodes[i].x,
-				// 		y: nodes[i].y,
-				// 		id: nodes[i].id,
-				// 		bonds: nodes[i].bonds
-				// });
-				nodeIdArr.push(nodes[i].id);
-				input_txt += nodes[i].symbol + " ";
+				specialNodes.push({
+						symbol: nodes[i].symbol,
+						size: nodes[i].size,
+						x: nodes[i].x,
+						y: nodes[i].y,
+						id: nodes[i].id,
+						bonds: nodes[i].bonds
+				});
+				// nodeIdArr.push(nodes[i].id);
+				// input_txt += nodes[i].symbol + " ";
 				// 予めノード数分空の文字列配列をいれておく
-				edges_arr_for_input_txt[i] = "";
+				// edges_arr_for_input_txt[i] = "";
 			}
 
 			for (var i = 0; i < links.length; i++) {
-				// specialLinks.push({
-				// 		source: nodeIdArr.indexOf(links[i].source.id),
-				// 		target: nodeIdArr.indexOf(links[i].target.id),
-				// 		id: links[i].id,
-				// 		bondType: links[i].bondType
-				// });
+				specialLinks.push({
+						// source: nodeIdArr.indexOf(links[i].source.id),
+						// target: nodeIdArr.indexOf(links[i].target.id),
+						source: links[i].source.id,
+						target: links[i].target.id,
+						id: links[i].id,
+						bondType: links[i].bondType
+				});
 				// ノードに対して存在するエッジをそれぞれ配列に格納
-				edges_arr_for_input_txt[nodeIdArr.indexOf(links[i].source.id)] += nodeIdArr.indexOf(links[i].target.id) + " ";
-				edges_arr_for_input_txt[nodeIdArr.indexOf(links[i].target.id)] += nodeIdArr.indexOf(links[i].source.id)  + " ";
+				// edges_arr_for_input_txt[nodeIdArr.indexOf(links[i].source.id)] += nodeIdArr.indexOf(links[i].target.id) + " ";
+				// edges_arr_for_input_txt[nodeIdArr.indexOf(links[i].target.id)] += nodeIdArr.indexOf(links[i].source.id)  + " ";
 			}
 			// 配列edges_arr_for_input_txtを順に処理
-			$.each(edges_arr_for_input_txt,
-			  function(index, elem) {
-			  	input_txt += "\n" + elem;
-			  }
-			);
-			// floorPlan = {
-			// 	nodes: specialNodes,
-			// 	links: specialLinks
-			// };
+			// $.each(edges_arr_for_input_txt,
+			//   function(index, elem) {
+			//   	input_txt += "\n" + elem;
+			//   }
+			// );
+			floorPlan = {
+				nodes: specialNodes,
+				links: specialLinks
+			};
 
 			// ここまでで
 			// input_txt =
@@ -439,19 +442,19 @@
 			// 3
 			// 0 1 2
 			// のようになっている
-			d3.select("#floorPlanInput")
-				.text(input_txt);
+			// d3.select("#floorPlanInput")
+				// .text(input_txt);
 
-			// vex.dialog.open({
-			// 	message: 'To save your current floor plan, copy the data below. Next time you visit click on the load floor plan and input your saved data:',
-			// 	input: "FloorPlan: <br/>\n<textarea id=\"rooms\" name=\"rooms\" value=\"\" style=\"height:150px\" placeholder=\"FloorPlan Data\">" + JSON.stringify(floorPlan) + "</textarea>",
-			// 	buttons: [
-			// 		$.extend({}, vex.dialog.buttons.YES, {
-			// 			text: 'Ok'
-			// 		})
-			// 	],
-			// 	callback: function(data) {}
-			// });
+			vex.dialog.open({
+				message: 'To save your current floor plan, copy the data below. Next time you visit click on the load floor plan and input your saved data:',
+				input: "FloorPlan: <br/>\n<textarea id=\"rooms\" name=\"rooms\" value=\"\" style=\"height:150px\" placeholder=\"FloorPlan Data\">" + JSON.stringify(floorPlan) + "</textarea>",
+				buttons: [
+					$.extend({}, vex.dialog.buttons.YES, {
+						text: 'Ok'
+					})
+				],
+				callback: function(data) {}
+			});
 		}; // window.saveFloorPlan = function ()
 
 		window.changeRoom = function (roomType) {
@@ -632,8 +635,8 @@
 				getRoomData(roomSelected).bonds++; // Increment bond count on selected room
 
 				links.push({
-					source: newRoom,
-					target: getRoomData(roomSelected),
+					source: getRoomData(roomSelected),
+					target: newRoom,
 					bondType: 1,
 					id: generateRandomID()
 				}); // Need to make sure is unique

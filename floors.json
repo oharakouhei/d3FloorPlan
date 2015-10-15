@@ -1,10 +1,10 @@
 {
     "1LDK": {
         "nodes": [
-          {"symbol": "LDK", "size": 12, "bonds": 1, "id": 1},
-          {"symbol": "R", "size": 6, "bonds": 1, "id": 2},
-          {"symbol": "WC", "size": 3, "bonds": 1, "id": 3},
-          {"symbol": "Ba", "size": 4, "bonds": 1, "id": 4}
+          {"symbol": "LDK", "size": 12, "bonds": 1, "id": 0},
+          {"symbol": "R", "size": 6, "bonds": 1, "id": 1},
+          {"symbol": "WC", "size": 3, "bonds": 1, "id": 2},
+          {"symbol": "Ba", "size": 4, "bonds": 1, "id": 3}
         ],
         "links": [
           {"source": 0, "target": 1,  "bondType": 1, "id": 21},
@@ -14,12 +14,12 @@
     },
     "2DK": {
         "nodes": [
-          {"symbol": "DK", "size": 8, "bonds": 1, "id": 1},
+          {"symbol": "DK", "size": 8, "bonds": 1, "id": 0},
+          {"symbol": "R", "size": 6, "bonds": 1, "id": 1},
           {"symbol": "R", "size": 6, "bonds": 1, "id": 2},
-          {"symbol": "R", "size": 6, "bonds": 1, "id": 3},
-          {"symbol": "PR", "size": 4, "bonds": 1, "id": 4},
-          {"symbol": "WC", "size": 3, "bonds": 1, "id": 5},
-          {"symbol": "Ba", "size": 4, "bonds": 1, "id": 6}
+          {"symbol": "PR", "size": 4, "bonds": 1, "id": 3},
+          {"symbol": "WC", "size": 3, "bonds": 1, "id": 4},
+          {"symbol": "Ba", "size": 4, "bonds": 1, "id": 5}
         ],
         "links": [
           {"source": 0, "target": 1,  "bondType": 1, "id": 21},
