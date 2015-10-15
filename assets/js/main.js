@@ -215,7 +215,8 @@
 	var newFloorPlanSimulation = function (newFloorPlan, example) {
 		// Might be super dirty, but it works!
 		$('#floorPlanDisplay').empty();
-		svg = d3.select("#floorPlanDisplay").append("svg")
+		svg = d3.select("#floorPlanDisplay")
+					.append("svg")
 					.attr("width", width + '%')
 					.attr("height", height + '%')
 					.call(selectionGlove);
@@ -261,11 +262,10 @@
 		nodesList = graph.nodes;
 		linksList = graph.links;
 
-
 		var force = d3.layout.force()
 						.nodes(nodesList)
 						.links(linksList)
-						.size([width*6, height*3.5])
+						.size([svg[0][0].clientWidth, svg[0][0].clientHeight]) // svg領域の横幅・縦幅を入れる
 						.charge(-1000)
 						.linkStrength(function (d) { return d.bondType * 1;})
 						.linkDistance(function(d) { return radius(d.source.size) + radius(d.target.size) + 20; })
@@ -391,7 +391,6 @@
 		} // buildModule()
 
 		window.saveFloorPlan = function () {
-			console.log('hoge');
 			var specialLinks = [], specialNodes = [], nodeIdArr = [];
 			input_txt = "";
 			edges_arr_for_input_txt = [];
