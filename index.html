@@ -69,20 +69,15 @@
 						  </ul>
 						</div>
 						<button type="button" onclick="Bond()" class="btn btn-info">Add Bond </button>
-						<div class="btn-group">
-						  <a class="btn btn-success" href="#" onclick="changeRoomSize(-1)">-1</a>
-						  <button type="button" class="btn btn-success">Change Room Size</button>
-						  <a class="btn btn-success" href="#" onclick="changeRoomSize(1)">+1</a>
-						</div>
 						<button type="button" onclick="deleteRoom()" class="btn btn-danger">Delete Room </button>
 						<button type="button" onclick="deleteBond()" class="btn btn-danger">Delete Bond </button>
+						<div id="floorPlanDisplay" style="border: 1px solid black; margin: 10px 0 0 0; background-color: #FFF; height: 500px;" class="row"></div>
 					</div>
 					<div class="col-md-4">
-
+		                <textarea type="text" id="floorPlanInput" name="graph_query" class="form-control" style="height: 555px;" readonly></textarea>
 					</div>
 				</div>
 			</div>
-			<div id="floorPlanDisplay" style="border: 1px solid black; background-color: #FFF; height: 500px;" class="row"></div>
 		</div>
 
 		<div>

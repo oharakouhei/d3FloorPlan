@@ -442,18 +442,20 @@
 			// 0 1 2
 			// のようになっている
 			// d3.select("#floorPlanInput")
-				// .text(input_txt);
+			// 	.text(input_txt);
+			d3.select("#floorPlanInput")
+				.text(JSON.stringify(floorPlan));
 
-			vex.dialog.open({
-				message: 'To save your current floor plan, copy the data below. Next time you visit click on the load floor plan and input your saved data:',
-				input: "FloorPlan: <br/>\n<textarea id=\"rooms\" name=\"rooms\" value=\"\" style=\"height:150px\" placeholder=\"FloorPlan Data\">" + JSON.stringify(floorPlan) + "</textarea>",
-				buttons: [
-					$.extend({}, vex.dialog.buttons.YES, {
-						text: 'Ok'
-					})
-				],
-				callback: function(data) {}
-			});
+			// vex.dialog.open({
+			// 	message: 'To save your current floor plan, copy the data below. Next time you visit click on the load floor plan and input your saved data:',
+			// 	input: "FloorPlan: <br/>\n<textarea id=\"rooms\" name=\"rooms\" value=\"\" style=\"height:150px\" placeholder=\"FloorPlan Data\">" + JSON.stringify(floorPlan) + "</textarea>",
+			// 	buttons: [
+			// 		$.extend({}, vex.dialog.buttons.YES, {
+			// 			text: 'Ok'
+			// 		})
+			// 	],
+			// 	callback: function(data) {}
+			// });
 		}; // window.saveFloorPlan = function ()
 
 		window.changeRoom = function (roomType) {
