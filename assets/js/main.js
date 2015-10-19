@@ -251,7 +251,7 @@
 	$.getJSON("floors.json", function(json) {
 		floorPlanExamples = json;
 		// if (null == js_obj_graph_structure) {
-			newFloorPlanSimulation (floorPlanExamples, '1LDK');
+			newFloorPlanSimulation (floorPlanExamples, 'itame');
 		// } else {
 			// newFloorPlanSimulation (adjacencyListTxt2JSON(js_obj_graph_structure));
 		// }
@@ -279,10 +279,10 @@
 		buildFloorPlan();
 
 		// 以下の1文主観的評価実験用
-		// クエリグラフ送信フォームの<input type="hidden" id="floorPlanExampleName">のvalueを主観的評価実験用カラムのfloorPlanExampleNameのために最初は1LDKに設定.
+		// クエリグラフ送信フォームの<input type="hidden" id="floorPlanExampleName">のvalueを主観的評価実験用カラムのfloorPlanExampleNameのために最初はitameに設定.
 		if ($('#floorPlanExampleName')) {
 			// if (null == js_obj_floor_plan_example_name) {
-				$('#floorPlanExampleName').attr('value', '1LDK');
+				$('#floorPlanExampleName').attr('value', 'itame');
 			// } else {
 				// $('#floorPlanExampleName').attr('value', js_obj_floor_plan_example_name);
 			// }
@@ -301,7 +301,7 @@
 				.select("text")  // not append
 				.attr("dy", ".35em")
 				.attr("text-anchor", "middle")
-				.text(function(d) { return d.symbol + d.size; });
+				.text(function(d) { return d.symbol; });
 
 			// 主観的評価実験用(changeRoomとchangeRoomSizeが起きたら)
 			if ($('#floorPlanExampleName').val()) {
@@ -373,7 +373,7 @@
 						.append("text")
 						.attr("dy", ".35em")
 						.attr("text-anchor", "middle")
-						.text(function(d) { return d.symbol + d.size; });
+						.text(function(d) { return d.symbol; });
 
 					// Give room the power to be selected
 					d3.select(this)

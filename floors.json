@@ -1,32 +1,15 @@
 {
-    "1LDK": {
+    "itame": {
         "nodes": [
-          {"symbol": "LDK", "size": 12, "bonds": 1, "id": 0},
-          {"symbol": "R", "size": 6, "bonds": 1, "id": 1},
-          {"symbol": "WC", "size": 3, "bonds": 1, "id": 2},
-          {"symbol": "Ba", "size": 4, "bonds": 1, "id": 3}
+          {"symbol": "炒める", "size": 8, "id": 0},
+          {"symbol": "たまねぎ", "size": 8, "id": 1},
+          {"symbol": "じゃがいも", "size": 8, "id": 2},
+          {"symbol": "にんじん", "size": 8, "id": 3}
         ],
         "links": [
-          {"source": 0, "target": 1,  "bondType": 1, "id": 21},
-          {"source": 0, "target": 2,  "bondType": 1, "id": 22},
-          {"source": 0, "target": 3,  "bondType": 1, "id": 23}
-        ]
-    },
-    "2DK": {
-        "nodes": [
-          {"symbol": "DK", "size": 8, "bonds": 1, "id": 0},
-          {"symbol": "R", "size": 6, "bonds": 1, "id": 1},
-          {"symbol": "R", "size": 6, "bonds": 1, "id": 2},
-          {"symbol": "PR", "size": 4, "bonds": 1, "id": 3},
-          {"symbol": "WC", "size": 3, "bonds": 1, "id": 4},
-          {"symbol": "Ba", "size": 4, "bonds": 1, "id": 5}
-        ],
-        "links": [
-          {"source": 0, "target": 1,  "bondType": 1, "id": 21},
-          {"source": 0, "target": 2,  "bondType": 1, "id": 22},
-          {"source": 0, "target": 3,  "bondType": 1, "id": 23},
-          {"source": 3, "target": 4,  "bondType": 1, "id": 24},
-          {"source": 3, "target": 5,  "bondType": 1, "id": 25}
+          {"source": 1, "target": 0,  "bondType": 1, "id": 21},
+          {"source": 2, "target": 0,  "bondType": 1, "id": 22},
+          {"source": 3, "target": 0,  "bondType": 1, "id": 23}
         ]
     }
 }

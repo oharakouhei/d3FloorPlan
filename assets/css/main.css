@@ -20,6 +20,7 @@
 .node circle {
   stroke: #000;
   stroke-width: 1.5px;
+  cursor: pointer;
 }
 
 .node text {
