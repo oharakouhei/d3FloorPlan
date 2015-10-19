@@ -2,21 +2,26 @@ function glow(url) {
   var stdDeviation = 2,
       rgb = "#1F75C4",
       colorMatrix = "0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0";
- 
+
   if (!arguments.length) {
     url = "glow";
   }
- 
+
   function my() {
- 
+
     var defs = this.append("defs");
- 
+
     var filter = defs.append("filter")
         .attr("id", url)
-        .attr("x", "-20%")
-        .attr("y", "-20%")
-        .attr("width", "140%")
-        .attr("height", "140%")
+        // .attr("x", "-20%")
+        // .attr("y", "-20%")
+        // .attr("width", "140%")
+        // .attr("height", "140%")
+        // エッジが垂直(Vertical)や水平(Horizontal)のときもちゃんとeffectが見えるよう
+        .attr("x", "-1020%")
+        .attr("y", "-1020%")
+        .attr("width", "2140%")
+        .attr("height", "2140%")
       .call(function() {
         this.append("feColorMatrix")
             .attr("type", "matrix")
@@ -26,7 +31,7 @@ function glow(url) {
             .attr("stdDeviation", stdDeviation)
             .attr("result", "coloredBlur");
       });
- 
+
     filter.append("feMerge")
       .call(function() {
         this.append("feMergeNode")
@@ -35,7 +40,7 @@ function glow(url) {
             .attr("in", "SourceGraphic");
       });
   }
- 
+
   my.rgb = function(value) {
     if (!arguments.length) return color;
     rgb = value;
@@ -47,12 +52,12 @@ function glow(url) {
       .replace("blue", color.b/256);
     return my;
   };
- 
+
   my.stdDeviation = function(value) {
     if (!arguments.length) return stdDeviation;
     stdDeviation = value;
     return my;
   };
- 
+
   return my;
 }
