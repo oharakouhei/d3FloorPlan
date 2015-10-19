@@ -719,13 +719,19 @@
 		}; // window.deleteBond = function ()
 
 
-		function tick() {
+		function tick(e) {
+			// Push sources up and targets down to form a weak tree.
+			var k = 6*e.alpha;
 			//Update old and new elements
 			// link.selectAll("line")
 			// 	.attr("x1", function(d) { return d.source.x; })
 			// 	.attr("y1", function(d) { return d.source.y; })
 			// 	.attr("x2", function(d) { return d.target.x; })
 			// 	.attr("y2", function(d) { return d.target.y; });
+			links.forEach(function (d, i) {
+				d.source.y -= k;
+				d.target.y += k;
+			});
 			link.selectAll("path")
 				.style('marker-end', 'url(#end-arrow)')
 				.attr('d', function(d) {
