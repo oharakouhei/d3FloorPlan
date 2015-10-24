@@ -2,7 +2,7 @@
 	var width = 100,
 		height = 100;
 
-	var floorPlanExamples = {};
+	var cookingProcedureExamples = {};
 
 	var radius = d3.scale.sqrt()
 	    .range([0, 6]);
@@ -12,26 +12,26 @@
 	var selectMode = "normal";
 
 	var selectionGlove = glow("selectionGlove").rgb("#0000A0").stdDeviation(7);
-	var roomSelected;
-	var roomJustBeforeSelected;
+	var vertexSelected;
+	var vertexJustBeforeSelected;
 	var orgoShmorgoObj;
 
 	// deselect node and bond when clicking other objects
-	d3.select("#floorPlanDisplay").on("click", function(){
-		if (roomSelected)
-			roomSelected.style("filter", "");
+	d3.select("#cookingProcedureDisplay").on("click", function(){
+		if (vertexSelected)
+			vertexSelected.style("filter", "");
 		if (bondSelected)
 			bondSelected.style("filter", "");
-		roomSelected = null;
+		vertexSelected = null;
 		bondSelected = null;
 	});
 
-	var roomClicked = function (dataPoint) {
+	var vertexClicked = function (dataPoint) {
 		d3.event.stopPropagation(); // to avoid duplicating click events
-		if (roomSelected)
-			roomSelected.style("filter", "");
+		if (vertexSelected)
+			vertexSelected.style("filter", "");
 
-		roomSelected = d3.select(this)
+		vertexSelected = d3.select(this)
 							.select("circle")
 							.style("filter", "url(#selectionGlove)");
 
@@ -70,7 +70,7 @@
 		});
 	}
 
-	var svg = d3.select("#floorPlanDisplay")
+	var svg = d3.select("#cookingProcedureDisplay")
 				.append("svg")
 				.attr("width", width + '%')
 				.attr("height", height + '%')
@@ -114,7 +114,7 @@
 			text = null;
 			return null;
 		}
-		// 最終的にfloors.jsonのような形のオブジェクトにする
+		// 最終的にcookingProcedureExample.jsonのような形のオブジェクトにする
 		// {"nodes": [{}, {},...], "links": [{}, {},...]}
 		var data_array = text.split(/\r\n|\r|\n/);  // 改行コードで分割
 		var len = data_array.length;
@@ -134,7 +134,7 @@
 				for (var j = 0; j < line_arr.length; j++) {
 					var nodes_obj = {};
 					nodes_obj["symbol"] = line_arr[j];
-					nodes_obj["size"] = roomDB[line_arr[j]].size;
+					nodes_obj["size"] = vertexDB[line_arr[j]].size;
 					nodes_obj["bonds"] = 1;
 					nodes_obj["id"] = j;
 					nodes_arr[nodes_arr.length] = nodes_obj;
@@ -171,10 +171,10 @@
 	// 3
 	// 0 1 2
 	// の形
-	window.loadFloorPlan = function () {
+	window.loadCookingProcedure = function () {
 		vex.dialog.open({
-				message: 'Copy your saved floor plan data:',
-				input: "FloorPlan: <br/>\n<textarea id=\"floorPlan\" name=\"floorPlan\" value=\"\" style=\"height:150px\" placeholder=\"Saved FloorPlan Data\" required></textarea>",
+				message: 'Copy your saved cooking procedure data:',
+				input: "CookingProcedure: <br/>\n<textarea id=\"cookingProcedure\" name=\"cookingProcedure\" value=\"\" style=\"height:150px\" placeholder=\"Saved CookingProcedure Data\" required></textarea>",
 				buttons: [
 					$.extend({}, vex.dialog.buttons.YES, {
 					text: 'Load'
@@ -184,8 +184,8 @@
 				],
 				callback: function(data) {
 					if (data !== false) {
-						var obj = adjacencyListTxt2JSON(data.floorPlan);
-						newFloorPlanSimulation(obj);
+						var obj = adjacencyListTxt2JSON(data.cookingProcedure);
+						newCookingProcedureSimulation(obj);
 					}
 				}
 			});
@@ -193,10 +193,10 @@
 
 	// JSON形式で読み込み
 	// {"nodes": [{}, {},...], "links": [{}, {},...]}
-	window.loadFloorPlanJSON = function () {
+	window.loadCookingProcedureJSON = function () {
 		vex.dialog.open({
-				message: 'Copy your saved floor plan data:',
-				input: "FloorPlan: <br/>\n<textarea id=\"floorPlan\" name=\"floorPlan\" value=\"\" style=\"height:150px\" placeholder=\"Saved FloorPlan Data\" required></textarea>",
+				message: 'Copy your saved cooking procedure data:',
+				input: "CookingProcedure: <br/>\n<textarea id=\"cookingProcedure\" name=\"cookingProcedure\" value=\"\" style=\"height:150px\" placeholder=\"Saved CookingProcedure Data\" required></textarea>",
 				buttons: [
 					$.extend({}, vex.dialog.buttons.YES, {
 					text: 'Load'
@@ -206,16 +206,16 @@
 				],
 				callback: function(data) {
 					if (data !== false) {
-						newFloorPlanSimulation(JSON.parse(data.floorPlan));
+						newCookingProcedureSimulation(JSON.parse(data.cookingProcedure));
 					}
 				}
 			});
 	};
 
-	var newFloorPlanSimulation = function (newFloorPlan, example) {
+	var newCookingProcedureSimulation = function (newCookingProcedure, example) {
 		// Might be super dirty, but it works!
-		$('#floorPlanDisplay').empty();
-		svg = d3.select("#floorPlanDisplay")
+		$('#cookingProcedureDisplay').empty();
+		svg = d3.select("#cookingProcedureDisplay")
 					.append("svg")
 					.attr("width", width + '%')
 					.attr("height", height + '%')
@@ -224,36 +224,36 @@
 		setArrowDefineToSVG(svg);
 
 		if (example)
-			newFloorPlan = newFloorPlan[example];
-		newFloorPlan = $.extend(true, {}, newFloorPlan);
+			newCookingProcedure = newCookingProcedure[example];
+		newCookingProcedure = $.extend(true, {}, newCookingProcedure);
 		// ノードに色を付ける
-		newFloorPlan['nodes'].forEach(function (data, i) {
-			newFloorPlan['nodes'][i].color = roomDB[data.symbol].color;
+		newCookingProcedure['nodes'].forEach(function (data, i) {
+			newCookingProcedure['nodes'][i].color = vertexDB[data.symbol].color;
 		});
-		orgoShmorgoObj = new orgoShmorgo(newFloorPlan);
+		orgoShmorgoObj = new orgoShmorgo(newCookingProcedure);
 
 		Messenger().post({
-			message: 'New FloorPlan Loaded',
+			message: 'New CookingProcedure Loaded',
 			type: 'success',
 			showCloseButton: true,
 			hideAfter: 2
 		});
 	};
 
-	window.loadFloorPlanExample = function () {
-		newFloorPlanSimulation (floorPlanExamples, $('#floorPlanExample').val().trim());
+	window.loadCookingProcedureExample = function () {
+		newCookingProcedureSimulation (cookingProcedureExamples, $('#cookingProcedureExample').val().trim());
 
 		// 主観的評価実験用
-		// 「間取り読み込み」ボタンを押したら<input type="hidden" id="floorPlanExampleName">のvalueを更新
-		$('#floorPlanExampleName').attr('value', $('#floorPlanExample').val());
+		// loadCookingProcedureExampleをクリックイベントにしているボタンを押したら<input type="hidden" id="cookingProcedureExampleName">のvalueを更新
+		$('#cookingProcedureExampleName').attr('value', $('#cookingProcedureExample').val());
 	};
 
-	$.getJSON("floors.json", function(json) {
-		floorPlanExamples = json;
+	$.getJSON("cookingProcedureExample.json", function(json) {
+		cookingProcedureExamples = json;
 		// if (null == js_obj_graph_structure) {
-			newFloorPlanSimulation (floorPlanExamples, 'itame');
+			newCookingProcedureSimulation (cookingProcedureExamples, 'itame');
 		// } else {
-			// newFloorPlanSimulation (adjacencyListTxt2JSON(js_obj_graph_structure));
+			// newCookingProcedureSimulation (adjacencyListTxt2JSON(js_obj_graph_structure));
 		// }
 	});
 
@@ -276,15 +276,15 @@
 			link = svg.selectAll(".link"),
 			node = svg.selectAll(".node");
 
-		buildFloorPlan();
+		buildCookingProcedure();
 
 		// 以下の1文主観的評価実験用
-		// クエリグラフ送信フォームの<input type="hidden" id="floorPlanExampleName">のvalueを主観的評価実験用カラムのfloorPlanExampleNameのために最初はitameに設定.
-		if ($('#floorPlanExampleName')) {
+		// クエリグラフ送信フォームの<input type="hidden" id="cookingProcedureExampleName">のvalueを主観的評価実験用カラムのcookingProcedureExampleNameのために最初はitameに設定.
+		if ($('#cookingProcedureExampleName')) {
 			// if (null == js_obj_floor_plan_example_name) {
-				$('#floorPlanExampleName').attr('value', 'itame');
+				$('#cookingProcedureExampleName').attr('value', 'itame');
 			// } else {
-				// $('#floorPlanExampleName').attr('value', js_obj_floor_plan_example_name);
+				// $('#cookingProcedureExampleName').attr('value', js_obj_floor_plan_example_name);
 			// }
 		}
 
@@ -296,23 +296,23 @@
 				.attr("r", function(d) { return radius(d.size*2); })
 				.style("fill", function(d) { return d.color; });
 
-			// Add room symbol
+			// Add vertex symbol
 			d3.select(g)
 				.select("text")  // not append
 				.attr("dy", ".35em")
 				.attr("text-anchor", "middle")
 				.text(function(d) { return d.symbol; });
 
-			// 主観的評価実験用(changeRoomとchangeRoomSizeが起きたら)
-			if ($('#floorPlanExampleName').val()) {
-				$('#floorPlanExampleName').attr('value', '');
+			// 主観的評価実験用(changeVertexとchangeVertexSizeが起きたら)
+			if ($('#cookingProcedureExampleName').val()) {
+				$('#cookingProcedureExampleName').attr('value', '');
 			}
 		}; // function updateNodeGElement (g)
 
-		function buildFloorPlan () {
+		function buildCookingProcedure () {
 			// 主観的評価実験用(NodeやBondに対するaddやremoveが起きたら)
-			if ($('#floorPlanExampleName').val()) {
-				$('#floorPlanExampleName').attr('value', '');
+			if ($('#cookingProcedureExampleName').val()) {
+				$('#cookingProcedureExampleName').attr('value', '');
 			}
 
 			// Update link data
@@ -368,18 +368,18 @@
 						.attr("r", function(d) { return radius(d.size*2); })
 						.style("fill", function(d) { return d.color; });
 
-					// Add room symbol
+					// Add vertex symbol
 					d3.select(this)
 						.append("text")
 						.attr("dy", ".35em")
 						.attr("text-anchor", "middle")
 						.text(function(d) { return d.symbol; });
 
-					// Give room the power to be selected
+					// Give vertex the power to be selected
 					d3.select(this)
-						.on("click", roomClicked);
+						.on("click", vertexClicked);
 
-					// Grant room the power of gravity
+					// Grant vertex the power of gravity
 					d3.select(this)
 						.call(force.drag);
 				});
@@ -390,76 +390,97 @@
 			force.start();
 		} // buildModule()
 
-		window.saveFloorPlan = function () {
+		window.saveCookingProcedure = function () {
 			var specialLinks = [], specialNodes = [], nodeIdArr = [];
 			input_txt = "";
+			input_txt += nodes.length + "\n"; // 一行目にノード数
 			edges_arr_for_input_txt = [];
+			var bl_getParentNodeAndChildrenNodesSuccess = true;
 			for (var i = 0; i < nodes.length; i++) {
 				specialNodes.push({
 						symbol: nodes[i].symbol,
 						size: nodes[i].size,
-						x: nodes[i].x,
-						y: nodes[i].y,
+						// x: nodes[i].x,
+						// y: nodes[i].y,
 						id: nodes[i].id,
 						bonds: nodes[i].bonds
 				});
 				// nodeIdArr.push(nodes[i].id);
-				// input_txt += nodes[i].symbol + " ";
+
+				var arrParentNodeAndChildrenNodes = getParentNodeAndChildrenNodes(nodes[i]);
+				if (-1 == arrParentNodeAndChildrenNodes) {
+					bl_getParentNodeAndChildrenNodesSuccess = false;
+					break;
+				}
+				var objParentNode = arrParentNodeAndChildrenNodes[0];
+				var strParentNodeId = objParentNode ? String(objParentNode.id) : "null"; // 親ノードのid
+				var arrChildrenNodes = arrParentNodeAndChildrenNodes[1];
+				var intChildrenNodesLength = arrChildrenNodes.length; // 子ノードの数
+				var strChildrenIdList = "["; // 子ノードのidリスト
+				for (var j=0; j < intChildrenNodesLength; j++) {
+					strChildrenIdList += arrChildrenNodes[i].id + ",";
+				}
+				strChildrenIdList += "]";
+				input_txt += nodes[i].id +","+ nodes[i].symbol +","+ nodes[i].type +","+ strParentNodeId +","+ intChildrenNodesLength +","+ strChildrenIdList +"\n";
 				// 予めノード数分空の文字列配列をいれておく
 				// edges_arr_for_input_txt[i] = "";
 			}
 
-			for (var i = 0; i < links.length; i++) {
-				specialLinks.push({
-						// source: nodeIdArr.indexOf(links[i].source.id),
-						// target: nodeIdArr.indexOf(links[i].target.id),
-						source: links[i].source.id,
-						target: links[i].target.id,
-						id: links[i].id,
-						bondType: links[i].bondType
-				});
-				// ノードに対して存在するエッジをそれぞれ配列に格納
-				// edges_arr_for_input_txt[nodeIdArr.indexOf(links[i].source.id)] += nodeIdArr.indexOf(links[i].target.id) + " ";
-				// edges_arr_for_input_txt[nodeIdArr.indexOf(links[i].target.id)] += nodeIdArr.indexOf(links[i].source.id)  + " ";
+			// ノードの親数が正しければ
+			if(bl_getParentNodeAndChildrenNodesSuccess) {
+				for (var i = 0; i < links.length; i++) {
+					specialLinks.push({
+							// source: nodeIdArr.indexOf(links[i].source.id),
+							// target: nodeIdArr.indexOf(links[i].target.id),
+							source: links[i].source.id,
+							target: links[i].target.id,
+							id: links[i].id,
+							bondType: links[i].bondType
+					});
+					// ノードに対して存在するエッジをそれぞれ配列に格納
+					// edges_arr_for_input_txt[nodeIdArr.indexOf(links[i].source.id)] += nodeIdArr.indexOf(links[i].target.id) + " ";
+					// edges_arr_for_input_txt[nodeIdArr.indexOf(links[i].target.id)] += nodeIdArr.indexOf(links[i].source.id)  + " ";
+				}
+				// 配列edges_arr_for_input_txtを順に処理
+				// $.each(edges_arr_for_input_txt,
+				//   function(index, elem) {
+				//   	input_txt += "\n" + elem;
+				//   }
+				// );
+				cookingProcedure = {
+					nodes: specialNodes,
+					links: specialLinks
+				};
+
+				// ここまでで
+				// input_txt =
+				// B WC R LDK
+				// 3
+				// 3
+				// 3
+				// 0 1 2
+				// のようになっている
+				// d3.select("#cookingProcedureInput")
+				// 	.text(input_txt);
+				d3.select("#cookingProcedureInput")
+					// .text(JSON.stringify(cookingProcedure));
+					.text(input_txt);
+
+				// vex.dialog.open({
+				// 	message: 'To save your current cooking procedure, copy the data below. Next time you visit click on the load cooking procedure and input your saved data:',
+				// 	input: "CookingProcedure: <br/>\n<textarea id=\"vertexs\" name=\"vertexs\" value=\"\" style=\"height:150px\" placeholder=\"CookingProcedure Data\">" + JSON.stringify(cookingProcedure) + "</textarea>",
+				// 	buttons: [
+				// 		$.extend({}, vex.dialog.buttons.YES, {
+				// 			text: 'Ok'
+				// 		})
+				// 	],
+				// 	callback: function(data) {}
+				// });
 			}
-			// 配列edges_arr_for_input_txtを順に処理
-			// $.each(edges_arr_for_input_txt,
-			//   function(index, elem) {
-			//   	input_txt += "\n" + elem;
-			//   }
-			// );
-			floorPlan = {
-				nodes: specialNodes,
-				links: specialLinks
-			};
+		}; // window.saveCookingProcedure = function ()
 
-			// ここまでで
-			// input_txt =
-			// B WC R LDK
-			// 3
-			// 3
-			// 3
-			// 0 1 2
-			// のようになっている
-			// d3.select("#floorPlanInput")
-			// 	.text(input_txt);
-			d3.select("#floorPlanInput")
-				.text(JSON.stringify(floorPlan));
-
-			// vex.dialog.open({
-			// 	message: 'To save your current floor plan, copy the data below. Next time you visit click on the load floor plan and input your saved data:',
-			// 	input: "FloorPlan: <br/>\n<textarea id=\"rooms\" name=\"rooms\" value=\"\" style=\"height:150px\" placeholder=\"FloorPlan Data\">" + JSON.stringify(floorPlan) + "</textarea>",
-			// 	buttons: [
-			// 		$.extend({}, vex.dialog.buttons.YES, {
-			// 			text: 'Ok'
-			// 		})
-			// 	],
-			// 	callback: function(data) {}
-			// });
-		}; // window.saveFloorPlan = function ()
-
-		window.changeRoom = function (roomType) {
-			if (!roomType) {
+		window.changeVertex = function (vertexType) {
+			if (!vertexType) {
 				Messenger().post({
 					message: 'Internal error :(',
 					type: 'error',
@@ -467,34 +488,34 @@
 				});
 				return;
 			}
-			else if (!roomSelected) {
+			else if (!vertexSelected) {
 				Messenger().post({
-					message: 'No Room Selected',
+					message: 'No Vertex Selected',
 					type: 'error',
 					showCloseButton: true
 				});
 				return;
 			}
 			else {
-				var roomData = getRoomData(roomSelected);
-				nodes[roomData.index].symbol = roomType;
-				nodes[roomData.index].size = roomDB[roomType].size;
-				updateNodeGElement("#node_"+roomData.id);
+				var vertexData = getVertexData(vertexSelected);
+				nodes[vertexData.index].symbol = vertexType;
+				nodes[vertexData.index].size = vertexDB[vertexType].size;
+				updateNodeGElement("#node_"+vertexData.id);
 			}
-		} // window.changeRoom
+		} // window.changeVertex
 
-		window.changeRoomSize = function (sizeDiff) {
-			if (!roomSelected) {
+		window.changeVertexSize = function (sizeDiff) {
+			if (!vertexSelected) {
 				Messenger().post({
-					message: 'No Room Selected',
+					message: 'No Vertex Selected',
 					type: 'error',
 					showCloseButton: true
 				});
 				return;
 			}
-			var roomData = getRoomData(roomSelected);
-			var changeRoomSizePossible = function (room) {
-				return (0 < room.size + sizeDiff);
+			var vertexData = getVertexData(vertexSelected);
+			var changeVertexSizePossible = function (vertex) {
+				return (0 < vertex.size + sizeDiff);
 			};
 
 			if (!sizeDiff || ( -1 != sizeDiff && 1 != sizeDiff)) {
@@ -505,20 +526,20 @@
 				});
 				return;
 			}
-			else if (!changeRoomSizePossible(roomData)) {
+			else if (!changeVertexSizePossible(vertexData)) {
 				Messenger().post({
-					message: 'Room size cannot be 0 and less!',
+					message: 'Vertex size cannot be 0 and less!',
 					type: 'error',
 					showCloseButton: true
 				});
 				return;
 			}
-			nodes[roomData.index].size += sizeDiff;
-			updateNodeGElement("#node_"+roomData.id);
-		}; // window.changeRoomSize = function (sizeDiff)
+			nodes[vertexData.index].size += sizeDiff;
+			updateNodeGElement("#node_"+vertexData.id);
+		}; // window.changeVertexSize = function (sizeDiff)
 
-		window.addRoom = function (roomType) {
-			if (!roomType) {
+		window.addVertex = function (vertexType) {
+			if (!vertexType) {
 				Messenger().post({
 					message: 'Internal error :(',
 					type: 'error',
@@ -526,17 +547,17 @@
 				});
 				return;
 			}
-			else if (!roomSelected) {
-				addNewRoom(roomType, roomDB[roomType], true);
+			else if (!vertexSelected) {
+				addNewVertex(vertexType, vertexDB[vertexType], true);
 			}
 			else
-				addNewRoom(roomType, roomDB[roomType]);
-		}; // window.addRoom = function (roomType)
+				addNewVertex(vertexType, vertexDB[vertexType]);
+		}; // window.addVertex = function (vertexType)
 
 		window.Bond = function () {
-			if (!roomSelected) {
+			if (!vertexSelected) {
 				Messenger().post({
-					message: 'No Room Selected',
+					message: 'No Vertex Selected',
 					type: 'error',
 					showCloseButton: true
 				});
@@ -550,25 +571,25 @@
 					showCloseButton: true
 				});
 				selectMode = "bond";
-				roomJustBeforeSelected = roomSelected;
+				vertexJustBeforeSelected = vertexSelected;
 			}
 		}
 
-		function getRoomData (d3Room) {
-			return d3Room[0][0].parentNode.__data__;
+		function getVertexData (d3Vertex) {
+			return d3Vertex[0][0].parentNode.__data__;
 		}
 
-		function removeRoom (id) {
-			var roomToRemove = retriveRoom(id);
+		function removeVertex (id) {
+			var vertexToRemove = retriveVertex(id);
 			var bondsArr = getBonds(id);
-			var roomsArr = [roomToRemove.id];
+			var vertexsArr = [vertexToRemove.id];
 
 			for (var i = bondsArr.length - 1; i >= 0; i--) {
-				// Give bonded room
-				var bondedRoom = bondsArr[i].target.id !== id ? 'target' : 'source';
+				// Give bonded vertex
+				var bondedVertex = bondsArr[i].target.id !== id ? 'target' : 'source';
 
-				bondsArr[i][bondedRoom].bonds -= bondsArr[i].bondType;
-				// Convert room obj to id for later processing
+				bondsArr[i][bondedVertex].bonds -= bondsArr[i].bondType;
+				// Convert vertex obj to id for later processing
 				bondsArr[i] = bondsArr[i].id;
 			} // for (var i = bondsArr.length - 1; i >= 0; i--)
 
@@ -581,13 +602,13 @@
 				return arr;
 			};
 
-			// Remove rooms marked
-			nodes = spliceOut (nodes, roomsArr);
+			// Remove vertexs marked
+			nodes = spliceOut (nodes, vertexsArr);
 
 			// Remove bonds marked
 			links = spliceOut (links, bondsArr);
 
-		}; // function removeRoom (id)
+		}; // function removeVertex (id)
 
 		function removeBond (id) {
 			for (var i = links.length - 1; i >= 0; i--) {
@@ -597,112 +618,114 @@
 			}
 		}; // function removeBond (id)
 
-		var retriveRoom = function  (roomID) {
+		var retriveVertex = function  (vertexID) {
 			for (var i = nodes.length - 1; i >= 0; i--) {
-				if (nodes[i].id === roomID)
+				if (nodes[i].id === vertexID)
 					return nodes[i];
 			}
 			return null;
 		};
 
-		function addNewRoom (roomType, roomDBObj, isSeparated) {
+		function addNewVertex (vertexType, vertexDBObj, isSeparated) {
 			isSeparated = (null == isSeparated) ? false: isSeparated;
 			if (isSeparated) {
-				var newRoom = {
-							symbol: roomType,
-							size: roomDBObj.size,
+				var newVertex = {
+							symbol: vertexType,
+							size: vertexDBObj.size,
+							type: vertexDBObj.type,
 							x: width / 3 +'%',
 							y: 10,
 							bonds: 1,
-							color: roomDBObj.color,
+							color: vertexDBObj.color,
 							id: generateRandomID () // Need to make sure is unique
 						},
 
-				n = nodes.push(newRoom);
+				n = nodes.push(newVertex);
 			}
 			else {
-				var newRoom = {
-							symbol: roomType,
-							size: roomDBObj.size,
-							x: getRoomData(roomSelected).x + getRandomInt (-15, 15),
-							y: getRoomData(roomSelected).y + getRandomInt (-15, 15),
+				var newVertex = {
+							symbol: vertexType,
+							size: vertexDBObj.size,
+							type: vertexDBObj.type,
+							x: getVertexData(vertexSelected).x + getRandomInt (-15, 15),
+							y: getVertexData(vertexSelected).y + getRandomInt (-15, 15),
 							bonds: 1,
-							color: roomDBObj.color,
+							color: vertexDBObj.color,
 							id: generateRandomID (), // Need to make sure is unique
 						},
 
-				n = nodes.push(newRoom);
+				n = nodes.push(newVertex);
 
-				getRoomData(roomSelected).bonds++; // Increment bond count on selected room
+				getVertexData(vertexSelected).bonds++; // Increment bond count on selected vertex
 
 				links.push({
-					source: getRoomData(roomSelected),
-					target: newRoom,
+					source: getVertexData(vertexSelected),
+					target: newVertex,
 					bondType: 1,
 					id: generateRandomID()
 				}); // Need to make sure is unique
 			}
 
-			buildFloorPlan();
-		} // function addNewRoom (roomType, roomDBObj)
+			buildCookingProcedure();
+		} // function addNewVertex (vertexType, vertexDBObj)
 
 		this.addNewBond = function () {
-			var roomJustBeforeSelected_id = getRoomData(roomJustBeforeSelected).id;
-			var roomSelected_id = getRoomData(roomSelected).id;
+			var vertexJustBeforeSelected_id = getVertexData(vertexJustBeforeSelected).id;
+			var vertexSelected_id = getVertexData(vertexSelected).id;
 			// if there have already been a bond
 			for (var i = links.length - 1; i >= 0; i--) {
 				var source_id = links[i].source.id;
 				var target_id = links[i].target.id;
-				if ((source_id === roomJustBeforeSelected_id && target_id === roomSelected_id) || (target_id === roomJustBeforeSelected_id && source_id === roomSelected_id)) {
+				if ((source_id === vertexJustBeforeSelected_id && target_id === vertexSelected_id) || (target_id === vertexJustBeforeSelected_id && source_id === vertexSelected_id)) {
 						Messenger().post({
 							message: 'There have already been a bond. Please push "Bond" button and try again.',
 							type: 'error',
 							hideAfter: 3,
 							showCloseButton: true
 						});
-						roomJustBeforeSelected = null;
+						vertexJustBeforeSelected = null;
 						selectMode = "normal";
 						return;
 				}
 			}
 
-			getRoomData(roomJustBeforeSelected).bonds++; // Increment bond count on selected room
+			getVertexData(vertexJustBeforeSelected).bonds++; // Increment bond count on selected vertex
 
 			links.push({
-				source: getRoomData(roomJustBeforeSelected),
-				target: getRoomData(roomSelected),
+				source: getVertexData(vertexJustBeforeSelected),
+				target: getVertexData(vertexSelected),
 				bondType: 1,
 				id: generateRandomID()
 			}); // Need to make sure is unique
 
-			buildFloorPlan();
-			roomJustBeforeSelected = null;
+			buildCookingProcedure();
+			vertexJustBeforeSelected = null;
 			selectMode = "normal";
 		}
 
-		var getBonds = function (roomID) {
+		var getBonds = function (vertexID) {
 			var arr = [];
 			for (var i = links.length - 1; i >= 0; i--) {
-				if (links[i].source.id === roomID || links[i].target.id === roomID)
+				if (links[i].source.id === vertexID || links[i].target.id === vertexID)
 					arr.push(links[i]);
 			}
 			return arr;
 		}
 
-		window.deleteRoom = function () {
-			if (!roomSelected) {
+		window.deleteVertex = function () {
+			if (!vertexSelected) {
 				Messenger().post({
-					message: 'No Room Selected',
+					message: 'No Vertex Selected',
 					type: 'error',
 					showCloseButton: true
 				});
 				return;
 			}
 
-			removeRoom(getRoomData(roomSelected).id);
-			roomSelected = null;
-			buildFloorPlan ();
-		}; // window.deleteRoom = function ()
+			removeVertex(getVertexData(vertexSelected).id);
+			vertexSelected = null;
+			buildCookingProcedure ();
+		}; // window.deleteVertex = function ()
 
 		window.deleteBond = function () {
 			if (!bondSelected) {
@@ -713,11 +736,31 @@
 				});
 				return;
 			}
-			removeBond(getRoomData(bondSelected).id);
+			removeBond(getVertexData(bondSelected).id);
 			bondSelected = null;
-			buildFloorPlan ();
+			buildCookingProcedure ();
 		}; // window.deleteBond = function ()
 
+		function getParentNodeAndChildrenNodes(objNode) {
+			var intCountParent = 0; // 親が複数存在していたらアラートを出す
+			var objParentNode = null; // 親がいないのがデフォルト
+			var arrChildrenNodes = []; // 子供がいないのがデフォルト
+			var len = links.length;
+			for (var i = 0; i < len; i++) {
+				if (objNode == links[i].source) {
+					intCountParent++;
+					if (2 <= intCountParent) {
+						alert("error:「"+ objNode.symbol +"」ノードに複数の親(矢印の先)が存在します");
+						return -1;
+					}
+					objParentNode = links[i].target;
+				} else if (objNode == links[i].target) {
+					arrChildrenNodes[arrChildrenNodes.length] = links[i].source;
+				}
+			}
+			var arr = [objParentNode, arrChildrenNodes];
+			return arr;
+		};
 
 		function tick(e) {
 			// Push sources up and targets down to form a weak tree.

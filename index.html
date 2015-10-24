@@ -29,51 +29,44 @@
 						<div class="input-group">
 					   <!-- <input type="text" disabled style="background-color: #fff; cursor: auto;" placeholder="Carbon Name" class="form-control">
 					      	<span class="input-group-btn">
-					    		<button style="padding-left:5px" class="btn btn-default" onclick="loadFloorPlanExample()" type="button">Load FloorPlan</button>
+					    		<button style="padding-left:5px" class="btn btn-default" onclick="loadCookingProcedureExample()" type="button">Load CookingProcedure</button>
 					    	</span> -->
-						    <select id="floorPlanExample" class="form-control">
+						    <select id="cookingProcedureExample" class="form-control">
 							    <option selected value="itame">炒め物</option>
 							</select>
 							<span class="input-group-btn">
-					    		<button style="margin-left: 5px; margin-right:210px" class="btn btn-default" onclick="loadFloorPlanExample()" type="button">Load FloorPlan</button>
+					    		<button style="margin-left: 5px; margin-right:210px" class="btn btn-default" onclick="loadCookingProcedureExample()" type="button">料理手順例の読み込み</button>
 					    	</span>
 					    </div><!-- /input-group -->
 					</div>
 					<div class="col-md-4">
 						<div class="text-right">
-							<button type="button" onclick="saveFloorPlan()" class="btn btn-info">Save FloorPlan </button>
-							<button type="button" onclick="loadFloorPlan()" class="btn btn-info">Load FloorPlan </button>
+							<button type="button" onclick="saveCookingProcedure()" class="btn btn-info">保存 </button>
+							<button type="button" onclick="loadCookingProcedure()" class="btn btn-info">料理手順の読み込み</button>
 						</div>
 					</div>
 				</div>
 				<div style="margin-top: 10px; margin-bottom: 10px" class="row">
 					<div class="col-md-8">
 						<div class="btn-group">
-						  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-						    Add Room <span class="caret"></span>
+						  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">ノード追加<span class="caret"></span>
 						  </button>
 						  <ul class="dropdown-menu" role="menu">
-						    <li><a href="#" onclick="addRoom('LDK')">Living Dining Kitchen (LDK)</a></li>
-						    <li><a href="#" onclick="addRoom('DK')">Dining Kitchen (DK)</a></li>
-						    <li><a href="#" onclick="addRoom('L')">Living (L)</a></li>
-						    <li><a href="#" onclick="addRoom('D')">Dining (D)</a></li>
-						    <li><a href="#" onclick="addRoom('K')">Kitchen (K)</a></li>
-						    <li><a href="#" onclick="addRoom('R')">Room (R)</a></li>
-						    <li><a href="#" onclick="addRoom('Ba')">Bath (Ba)</a></li>
-						    <li><a href="#" onclick="addRoom('UB')">Unit Bath (UB)</a></li>
-						    <li><a href="#" onclick="addRoom('PR')">Powder Room (PR)</a></li>
-						    <li><a href="#" onclick="addRoom('WC')">Water Closet (WC)</a></li>
-						    <li><a href="#" onclick="addRoom('E')">Entrance (E)</a></li>
-						    <li><a href="#" onclick="addRoom('Hall')">Hall (Hall)</a></li>
+						    <li><a href="#" onclick="addVertex('にんじん')">にんじん</a></li>
+						    <li><a href="#" onclick="addVertex('たまねぎ')">たまねぎ</a></li>
+						    <li><a href="#" onclick="addVertex('じゃがいも')">じゃがいも</a></li>
+						    <li><a href="#" onclick="addVertex('たまご')">たまご</a></li>
+						    <li><a href="#" onclick="addVertex('まぜる')">まぜる</a></li>
+						    <li><a href="#" onclick="addVertex('炒める')">炒める</a></li>
 						  </ul>
 						</div>
-						<button type="button" onclick="Bond()" class="btn btn-info">Add Bond </button>
-						<button type="button" onclick="deleteRoom()" class="btn btn-danger">Delete Room </button>
-						<button type="button" onclick="deleteBond()" class="btn btn-danger">Delete Bond </button>
-						<div id="floorPlanDisplay" style="border: 1px solid black; margin: 10px 0 0 0; background-color: #FFF; height: 500px;" class="row"></div>
+						<button type="button" onclick="Bond()" class="btn btn-info">エッジ追加</button>
+						<button type="button" onclick="deleteVertex()" class="btn btn-danger">ノード削除</button>
+						<button type="button" onclick="deleteBond()" class="btn btn-danger">エッジ削除</button>
+						<div id="cookingProcedureDisplay" style="border: 1px solid black; margin: 10px 0 0 0; background-color: #FFF; height: 500px;" class="row"></div>
 					</div>
 					<div class="col-md-4">
-		                <textarea type="text" id="floorPlanInput" name="graph_query" class="form-control" style="height: 555px;" readonly></textarea>
+		                <textarea type="text" id="cookingProcedureInput" name="graph_query" class="form-control" style="height: 555px;" readonly></textarea>
 					</div>
 				</div>
 			</div>
@@ -101,7 +94,7 @@
 		<script>vex.defaultOptions.className = 'vex-theme-default';</script>
 		<script type="text/javascript" src="assets/libs/d3/d3.v3.min.js"></script>
 		<script type="text/javascript" src="assets/libs/customed_glow.js"></script>
-		<script type="text/javascript" src="assets/js/roomDB.js"></script>
+		<script type="text/javascript" src="assets/js/vertexDB.js"></script>
 		<script type="text/javascript" src="assets/js/main.js"></script>
 	</body>
 </html>

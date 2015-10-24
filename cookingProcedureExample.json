@@ -1,0 +1,15 @@
+{
+    "itame": {
+        "nodes": [
+          {"symbol": "炒める", "type": "process", "size": 8, "id": 0},
+          {"symbol": "たまねぎ", "type": "food", "size": 8, "id": 1},
+          {"symbol": "じゃがいも", "type": "food", "size": 8, "id": 2},
+          {"symbol": "にんじん", "type": "food", "size": 8, "id": 3}
+        ],
+        "links": [
+          {"source": 1, "target": 0,  "bondType": 1, "id": 21},
+          {"source": 2, "target": 0,  "bondType": 1, "id": 22},
+          {"source": 3, "target": 0,  "bondType": 1, "id": 23}
+        ]
+    }
+}

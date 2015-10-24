@@ -1,43 +1,49 @@
-var roomDB = {};
+var vertexDB = {};
 
-roomDB ['にんじん'] = {
+vertexDB ['にんじん'] = {
 	name: 'にんじん',
 	symbol: 'にんじん',
+	type: 'food',
 	size: 8,
 	color: 'rgb(239, 232, 215)'
 };
 
-roomDB ['たまねぎ'] = {
+vertexDB ['たまねぎ'] = {
 	name: 'たまねぎ',
 	symbol: 'たまねぎ',
+	type: 'food',
 	size: 8,
 	color: 'rgb(239, 232, 215)'
 };
 
-roomDB ['じゃがいも'] = {
+vertexDB ['じゃがいも'] = {
 	name: 'じゃがいも',
 	symbol: 'じゃがいも',
+	type: 'food',
 	size: 8,
 	color: 'rgb(239, 232, 215)'
 };
 
-roomDB ['たまご'] = {
+vertexDB ['たまご'] = {
 	name: 'たまご',
 	symbol: 'たまご',
+	type: 'food',
 	size: 8,
 	color: 'rgb(239, 232, 215)'
 };
 
-roomDB ['まぜる'] = {
+vertexDB ['まぜる'] = {
 	name: 'まぜる',
 	symbol: 'まぜる',
+	type: 'process',
 	size: 8,
 	color: 'rgb(255, 200, 210)'
 };
 
-roomDB ['炒める'] = {
+vertexDB ['炒める'] = {
 	name: '炒める',
 	symbol: '炒める',
+	type: 'process',
 	size: 8,
 	color: 'rgb(255, 200, 210)'
 };
