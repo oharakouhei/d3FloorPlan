@@ -18,10 +18,10 @@ function glow(url) {
         // .attr("width", "140%")
         // .attr("height", "140%")
         // エッジが垂直(Vertical)や水平(Horizontal)のときもちゃんとeffectが見えるよう
-        .attr("x", "-1020%")
-        .attr("y", "-1020%")
-        .attr("width", "2140%")
-        .attr("height", "2140%")
+        .attr("x", "-10000%")
+        .attr("y", "-10000%")
+        .attr("width", "20000%")
+        .attr("height", "20000%")
       .call(function() {
         this.append("feColorMatrix")
             .attr("type", "matrix")
