@@ -1,27 +1,10 @@
-OrgoShmorgo
-=====================
-[OrgoShmorgo](http://emils.github.io/orgoShmorgo/) is an organic molecule visualizer built using D3.js. 
+saveのボタンを押した際の出力:
+1行目 => "ノード数"
+2行目以降(各ノードの情報) => "id,ラベル,種類,親id,子の数,子のidリスト"
 
-Getting Started
----------
-OrgoShmorgo has [Vagrant](http://www.vagrantup.com/) manage all the development setup. Once you have Vagrant setup, simply run `vagrant up` in the root of your clone. You now have an OrgoShmrogo instance running on [localhost:8080](localhost:8080).
-
-
-Project Goals
----------
-The future goals of the project:
-
- - Fully IUPAC conformant naming engine
- - Addition of a lot more functional groups
- - Ability to create rings
- - Integration with Wikipedia to display data on created organic molecules 
- 
-Credit
----------
-Built on top of [mbostock's](https://github.com/mbostock) original [molecule example](http://bl.ocks.org/mbostock/3037015).
-
-
-License
----------
-
-MIT © [Emil Stolarsky](http://stolarsky.com/)
+example:
+4
+0,炒める,process,null,3,[1,1,1,]
+1,たまねぎ,food,0,0,[]
+2,じゃがいも,food,0,0,[]
+3,にんじん,food,0,0,[]

@@ -47,3 +47,11 @@ vertexDB ['炒める'] = {
 	size: 8,
 	color: 'rgb(255, 200, 210)'
 };
+
+vertexDB ['包丁'] = {
+	name: '包丁',
+	symbol: '包丁',
+	type: 'cookware',
+	size: 8,
+	color: 'rgb(224, 240, 255)'
+};

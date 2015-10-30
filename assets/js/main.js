@@ -14,7 +14,7 @@
 	var selectionGlove = glow("selectionGlove").rgb("#0000A0").stdDeviation(7);
 	var vertexSelected;
 	var vertexJustBeforeSelected;
-	var orgoShmorgoObj;
+	var graphOperationObj;
 
 	// deselect node and bond when clicking other objects
 	d3.select("#cookingProcedureDisplay").on("click", function(){
@@ -31,12 +31,14 @@
 		if (vertexSelected)
 			vertexSelected.style("filter", "");
 
-		vertexSelected = d3.select(this)
-							.select("circle")
-							.style("filter", "url(#selectionGlove)");
+		vertexSelected = d3.select(this);
+		vertexSelected.select("ellipse")
+						.select("rect")
+						.select("polygon");
+		vertexSelected.style("filter", "url(#selectionGlove)");
 
 		if ("bond" == selectMode) {
-			orgoShmorgoObj.addNewBond();
+			graphOperationObj.addNewBond();
 		}
 	};
 
@@ -230,7 +232,7 @@
 		newCookingProcedure['nodes'].forEach(function (data, i) {
 			newCookingProcedure['nodes'][i].color = vertexDB[data.symbol].color;
 		});
-		orgoShmorgoObj = new orgoShmorgo(newCookingProcedure);
+		graphOperationObj = new graphOperation(newCookingProcedure);
 
 		Messenger().post({
 			message: 'New CookingProcedure Loaded',
@@ -257,7 +259,7 @@
 		// }
 	});
 
-	var orgoShmorgo = function(graph) {
+	var graphOperation = function(graph) {
 		var nodesList, linksList;
 		nodesList = graph.nodes;
 		linksList = graph.links;
@@ -292,9 +294,22 @@
 		function updateNodeGElement (g) {
 			// Add node circle
 			d3.select(g)
-				.select("circle") // not append
-				.attr("r", function(d) { return radius(d.size*2); })
+				// .select("circle") // not append
+				// .attr("r", function(d) { return radius(d.size*2); })
+				.select("rect") // not append
+				.attr({
+					x: function(d) { return -d.size*2.5 },
+					y: function(d) { return -d.size*2.5 },
+					width: function(d) { return d.size*5; },
+					height: function(d) { return d.size*5; }
+				})
+				.select("ellipse")
+				.attr("rx", function(d) { return radius(d.size*4); })
+				.attr("ry", function(d) { return radius(d.size*2); })
+				.select("polygon")
+				.attr("points", function (d) { return "0,-"+ d.size*3 +" -"+ d.size*5 +",0 0,"+ d.size*3 +" "+ d.size*5 +",0"; } )
 				.style("fill", function(d) { return d.color; });
+
 
 			// Add vertex symbol
 			d3.select(g)
@@ -363,10 +378,27 @@
 					// Add id
 					d3.select(this).attr("id", "node_" + d.id);
 					// Add node circle
-					d3.select(this)
-						.append("circle")
-						.attr("r", function(d) { return radius(d.size*2); })
-						.style("fill", function(d) { return d.color; });
+
+					var node_shape = d3.select(this);
+					if ("food" == d.type) {
+						node_shape.append("ellipse")
+								.attr("rx", function(d) { return radius(d.size*4); })
+								.attr("ry", function(d) { return radius(d.size*2); })
+								.style("fill", function(d) { return d.color; });
+					} else if ("process" == d.type) {
+						node_shape.append("rect") // not append
+								.attr({
+									x: function(d) { return -d.size*3 },
+									y: function(d) { return -d.size*3 },
+									width: function(d) { return d.size*6; },
+									height: function(d) { return d.size*6; }
+								})
+								.style("fill", function(d) { return d.color; });
+					} else if ("cookware" == d.type) {
+						node_shape.append("polygon")
+								.attr("points", function (d) { return "0,-"+ d.size*3 +" -"+ d.size*5 +",0 0,"+ d.size*3 +" "+ d.size*5 +",0"; } )
+								.style("fill", function(d) { return d.color; });
+					}
 
 					// Add vertex symbol
 					d3.select(this)
@@ -418,7 +450,11 @@
 				var intChildrenNodesLength = arrChildrenNodes.length; // 子ノードの数
 				var strChildrenIdList = "["; // 子ノードのidリスト
 				for (var j=0; j < intChildrenNodesLength; j++) {
-					strChildrenIdList += arrChildrenNodes[i].id + ",";
+					strChildrenIdList += arrChildrenNodes[j].id + ",";
+				}
+				if (1 <= intChildrenNodesLength) {
+					// 子ノードが存在していれば、[id,id,...,id]の形にするため最後の,を削除
+					strChildrenIdList = strChildrenIdList.slice(0, -1);
 				}
 				strChildrenIdList += "]";
 				input_txt += nodes[i].id +","+ nodes[i].symbol +","+ nodes[i].type +","+ strParentNodeId +","+ intChildrenNodesLength +","+ strChildrenIdList +"\n";
@@ -452,16 +488,6 @@
 					links: specialLinks
 				};
 
-				// ここまでで
-				// input_txt =
-				// B WC R LDK
-				// 3
-				// 3
-				// 3
-				// 0 1 2
-				// のようになっている
-				// d3.select("#cookingProcedureInput")
-				// 	.text(input_txt);
 				d3.select("#cookingProcedureInput")
 					// .text(JSON.stringify(cookingProcedure));
 					.text(input_txt);
@@ -637,7 +663,7 @@
 							y: 10,
 							bonds: 1,
 							color: vertexDBObj.color,
-							id: generateRandomID () // Need to make sure is unique
+							id: nodes.length // Need to make sure is unique
 						},
 
 				n = nodes.push(newVertex);
@@ -651,7 +677,7 @@
 							y: getVertexData(vertexSelected).y + getRandomInt (-15, 15),
 							bonds: 1,
 							color: vertexDBObj.color,
-							id: generateRandomID (), // Need to make sure is unique
+							id: nodes.length, // Need to make sure is unique
 						},
 
 				n = nodes.push(newVertex);
@@ -659,8 +685,8 @@
 				getVertexData(vertexSelected).bonds++; // Increment bond count on selected vertex
 
 				links.push({
-					source: getVertexData(vertexSelected),
-					target: newVertex,
+					source: newVertex,
+					target: getVertexData(vertexSelected),
 					bondType: 1,
 					id: generateRandomID()
 				}); // Need to make sure is unique
@@ -797,5 +823,5 @@
 
 			node.attr("transform", function(d) {return "translate(" + d.x + "," + d.y + ")"; });
 		}
-	}; // var orgoShmorgo = function(graph)
+	}; // var graphOperation = function(graph)
 })();

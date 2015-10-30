@@ -17,9 +17,9 @@
   stroke-width: 3px;
 }
 
-.node circle {
+.node circle, .node rect, .node ellipse, .node polygon {
   stroke: #000;
-  stroke-width: 1.5px;
+  stroke-width: 1px;
   cursor: pointer;
 }
 
