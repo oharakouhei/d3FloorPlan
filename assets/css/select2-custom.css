@@ -1,0 +1,17 @@
+.input-group span.select2
+{
+    height: 100%;
+}
+
+.input-group .select2 > .selection > .select2-selection
+{
+    height: 100%;
+    position: relative;
+}
+
+.input-group .select2 > .selection > .select2-selection > span
+{
+    position: absolute;
+    top: 50%;
+    margin-top: -1em;
+}

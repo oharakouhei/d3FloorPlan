@@ -19,6 +19,7 @@
 		<link rel="stylesheet" type="text/css" href="assets/css/main.css">
 		<link rel="stylesheet" href="assets/css/directedGraphEditor.css">
 		<link rel="stylesheet" href="assets/css/select2.min.css">
+		<link rel="stylesheet" href="assets/css/select2-custom.css">
 	</head>
 	<body>
 
@@ -49,8 +50,24 @@
 				</div>
 				<div style="margin-top: 10px; margin-bottom: 10px" class="row">
 					<div class="col-md-8">
-						<select id="selectAddFood" type="text" placeholder="食品名を入力してください" class="form-control"></select>
-						<button type="button" id="btnAddFood" class="btn btn-info">食品追加</button><br>
+						<div class="input-group">
+							<select id="selectAddFood" type="text" class="form-control"></select>
+							<span class="input-group-btn">
+								<button id="btnAddFood" class="btn btn-info" type="button" style="margin-left: 5px; margin-right:210px">食品追加</button>
+							</span>
+						</div>
+						<div class="input-group" style="margin-top: 5px;">
+							<select id="selectAddProcess" type="text" class="form-control"></select>
+							<span class="input-group-btn">
+								<button id="btnAddProcess" class="btn btn-info" type="button" style="margin-left: 5px; margin-right:210px">操作追加</button>
+							</span>
+						</div>
+						<div class="input-group" style="margin-top: 5px; margin-bottom: 5px;">
+							<select id="selectAddCookware" type="text" class="form-control"></select>
+							<span class="input-group-btn">
+								<button id="btnAddCookware" class="btn btn-info" type="button" style="margin-left: 5px; margin-right:210px">道具追加</button>
+							</span>
+						</div>
 <!-- 						<div class="btn-group">
 						  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">ノード追加<span class="caret"></span>
 						  </button>
@@ -89,7 +106,6 @@
 		<script src="assets/libs/vex/vex.combined.min.js"></script>
 		<script>vex.defaultOptions.className = 'vex-theme-default';</script>
 		<script type="text/javascript" src="assets/libs/d3/d3.v3.min.js"></script>
-		<script type="text/javascript" src="assets/js/select2.min.js"></script>
 		<script type="text/javascript" src="assets/js/select2.min.js"></script>
 		<script type="text/javascript" src="assets/libs/customed_glow.js"></script>
 		<script type="text/javascript" src="assets/js/vertexDB.js"></script>

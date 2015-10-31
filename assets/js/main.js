@@ -28,6 +28,7 @@
 		color: 'rgb(224, 240, 255)'
 	}
 
+	// 食材用select2
 	$("#selectAddFood").select2({
 	  ajax: {
 		url: "searchFood.php",
@@ -49,6 +50,7 @@
 	    },
 	    cache: true
 	  },
+	  placeholder: "食品名を入力してください",
 	  escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
 	  minimumInputLength: 1,
 	  // templateResult: formatRepo, // omitted for brevity, see the source of this page
@@ -56,6 +58,58 @@
 	}).on("change", function () {
 		var txtSelected = $("#select2-selectAddFood-container").get(0).innerText;
 		$("#btnAddFood").on("click", addVertex(txtSelected, 'food'));
+	});
+	// 操作用select2
+	$("#selectAddProcess").select2({
+	  ajax: {
+		url: "searchProcess.php",
+	    dataType: 'json',
+	    delay: 250,
+	    data: function (params) {
+	      return {
+	        q: params.term, // search term
+	        page: params.page
+	      };
+	    },
+	    processResults: function (data, page) {
+	      return {
+	        results: data
+	      };
+	    },
+	    cache: true
+	  },
+	  placeholder: "操作名を入力してください",
+	  escapeMarkup: function (markup) { return markup; },
+	  minimumInputLength: 1,
+	}).on("change", function () {
+		var txtSelected = $("#select2-selectAddProcess-container").get(0).innerText;
+		$("#btnAddProcess").on("click", addVertex(txtSelected, 'process'));
+	});
+	// 道具用select2
+	$("#selectAddCookware").select2({
+	  ajax: {
+		url: "searchCookware.php",
+	    dataType: 'json',
+	    delay: 250,
+	    data: function (params) {
+	      return {
+	        q: params.term, // search term
+	        page: params.page
+	      };
+	    },
+	    processResults: function (data, page) {
+	      return {
+	        results: data
+	      };
+	    },
+	    cache: true
+	  },
+	  placeholder: "道具名を入力してください",
+	  escapeMarkup: function (markup) { return markup; },
+	  minimumInputLength: 1,
+	}).on("change", function () {
+		var txtSelected = $("#select2-selectAddCookware-container").get(0).innerText;
+		$("#btnAddCookware").on("click", addVertex(txtSelected, 'cookware'));
 	});
 
 	// deselect node and bond when clicking other objects
