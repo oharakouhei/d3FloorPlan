@@ -363,7 +363,7 @@
 		var force = d3.layout.force()
 						.nodes(nodesList)
 						.links(linksList)
-						.size([svg[0][0].clientWidth, svg[0][0].clientHeight]) // svg領域の横幅・縦幅を入れる
+						.size([$("#cookingProcedureDisplay").width(), $("#cookingProcedureDisplay").height()]) // svg領域の横幅・縦幅を入れる
 						.charge(-1000)
 						.linkStrength(function (d) { return d.bondType * 1;})
 						.linkDistance(function(d) { return radius(d.source.size) + radius(d.target.size) + 20; })
