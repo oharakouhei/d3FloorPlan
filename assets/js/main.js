@@ -16,6 +16,18 @@
 	var vertexJustBeforeSelected;
 	var graphOperationObj;
 
+	// ノードの色を指定する
+	var vertexProperty = {};
+	vertexProperty['food'] = {
+		color: 'rgb(239, 232, 215)'
+	}
+	vertexProperty['process'] = {
+		color: 'rgb(255, 200, 210)'
+	}
+	vertexProperty['cookware'] = {
+		color: 'rgb(224, 240, 255)'
+	}
+
 	$("#selectAddFood").select2({
 	  ajax: {
 		url: "searchFood.php",
@@ -43,7 +55,7 @@
 	  // templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
 	}).on("change", function () {
 		var txtSelected = $("#select2-selectAddFood-container").get(0).innerText;
-		$("#btnAddFood").on("click", addVertex(txtSelected));
+		$("#btnAddFood").on("click", addVertex(txtSelected, 'food'));
 	});
 
 	// deselect node and bond when clicking other objects
@@ -166,7 +178,7 @@
 				for (var j = 0; j < line_arr.length; j++) {
 					var nodes_obj = {};
 					nodes_obj["symbol"] = line_arr[j];
-					nodes_obj["size"] = vertexDB[line_arr[j]].size;
+					nodes_obj["size"] = 8;
 					nodes_obj["bonds"] = 1;
 					nodes_obj["id"] = j;
 					nodes_arr[nodes_arr.length] = nodes_obj;
@@ -260,7 +272,7 @@
 		newCookingProcedure = $.extend(true, {}, newCookingProcedure);
 		// ノードに色を付ける
 		newCookingProcedure['nodes'].forEach(function (data, i) {
-			newCookingProcedure['nodes'][i].color = vertexDB[data.symbol].color;
+			newCookingProcedure['nodes'][i].color = vertexProperty[data.type].color;
 		});
 		graphOperationObj = new graphOperation(newCookingProcedure);
 
@@ -555,7 +567,7 @@
 			else {
 				var vertexData = getVertexData(vertexSelected);
 				nodes[vertexData.index].symbol = vertexName;
-				nodes[vertexData.index].size = vertexDB[vertexName].size;
+				nodes[vertexData.index].size = 8;
 				updateNodeGElement("#node_"+vertexData.id);
 			}
 		} // window.changeVertex
@@ -594,7 +606,11 @@
 			updateNodeGElement("#node_"+vertexData.id);
 		}; // window.changeVertexSize = function (sizeDiff)
 
-		window.addVertex = function (vertexName) {
+		//
+		// @param vertexName ノード名(じゃがいも,炒める,包丁,等...)
+		// @param vertexType ノードの種類(food, process, cookwareの3種)
+		//
+		window.addVertex = function (vertexName, vertexType) {
 			if (!vertexName) {
 				Messenger().post({
 					message: 'Internal error :(',
@@ -604,10 +620,10 @@
 				return;
 			}
 			else if (!vertexSelected) {
-				addNewVertex(vertexName, vertexDB[vertexName], true);
+				addNewVertex(vertexName, vertexType, true);
 			}
 			else
-				addNewVertex(vertexName, vertexDB[vertexName]);
+				addNewVertex(vertexName, vertexType);
 		}; // window.addVertex = function (vertexName)
 
 		window.Bond = function () {
@@ -632,7 +648,8 @@
 		}
 
 		function getVertexData (d3Vertex) {
-			return d3Vertex[0][0].parentNode.__data__;
+			// return d3Vertex[0][0].parentNode.__data__;
+			return d3Vertex[0][0].__data__;
 		}
 
 		function removeVertex (id) {
@@ -682,17 +699,17 @@
 			return null;
 		};
 
-		function addNewVertex (vertexName, vertexDBObj, isSeparated) {
+		function addNewVertex (vertexName, vertexType, isSeparated) {
 			isSeparated = (null == isSeparated) ? false: isSeparated;
 			if (isSeparated) {
 				var newVertex = {
 							symbol: vertexName,
-							size: vertexDBObj.size,
-							type: vertexDBObj.type,
+							size: 8,
+							type: vertexType,
 							x: width / 3 +'%',
 							y: 10,
 							bonds: 1,
-							color: vertexDBObj.color,
+							color: vertexProperty[vertexType].color,
 							id: nodes.length // Need to make sure is unique
 						},
 
@@ -701,12 +718,12 @@
 			else {
 				var newVertex = {
 							symbol: vertexName,
-							size: vertexDBObj.size,
-							type: vertexDBObj.type,
+							size: 8,
+							type: vertexType,
 							x: getVertexData(vertexSelected).x + getRandomInt (-15, 15),
 							y: getVertexData(vertexSelected).y + getRandomInt (-15, 15),
 							bonds: 1,
-							color: vertexDBObj.color,
+							color: vertexProperty[vertexType].color,
 							id: nodes.length, // Need to make sure is unique
 						},
 
@@ -723,7 +740,7 @@
 			}
 
 			buildCookingProcedure();
-		} // function addNewVertex (vertexName, vertexDBObj)
+		} // function addNewVertex (vertexName, vertexType)
 
 		this.addNewBond = function () {
 			var vertexJustBeforeSelected_id = getVertexData(vertexJustBeforeSelected).id;
