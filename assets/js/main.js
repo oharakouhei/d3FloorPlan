@@ -16,7 +16,7 @@
 	var vertexJustBeforeSelected;
 	var graphOperationObj;
 
-	$("#selectAddVertex").select2({
+	$("#selectAddFood").select2({
 	  ajax: {
 		url: "searchFood.php",
 	    dataType: 'json',
@@ -41,8 +41,10 @@
 	  minimumInputLength: 1,
 	  // templateResult: formatRepo, // omitted for brevity, see the source of this page
 	  // templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
+	}).on("change", function () {
+		var txtSelected = $("#select2-selectAddFood-container").get(0).innerText;
+		$("#btnAddFood").on("click", addVertex(txtSelected));
 	});
-
 
 	// deselect node and bond when clicking other objects
 	d3.select("#cookingProcedureDisplay").on("click", function(){
@@ -533,8 +535,8 @@
 			}
 		}; // window.saveCookingProcedure = function ()
 
-		window.changeVertex = function (vertexType) {
-			if (!vertexType) {
+		window.changeVertex = function (vertexName) {
+			if (!vertexName) {
 				Messenger().post({
 					message: 'Internal error :(',
 					type: 'error',
@@ -552,8 +554,8 @@
 			}
 			else {
 				var vertexData = getVertexData(vertexSelected);
-				nodes[vertexData.index].symbol = vertexType;
-				nodes[vertexData.index].size = vertexDB[vertexType].size;
+				nodes[vertexData.index].symbol = vertexName;
+				nodes[vertexData.index].size = vertexDB[vertexName].size;
 				updateNodeGElement("#node_"+vertexData.id);
 			}
 		} // window.changeVertex
@@ -592,8 +594,8 @@
 			updateNodeGElement("#node_"+vertexData.id);
 		}; // window.changeVertexSize = function (sizeDiff)
 
-		window.addVertex = function (vertexType) {
-			if (!vertexType) {
+		window.addVertex = function (vertexName) {
+			if (!vertexName) {
 				Messenger().post({
 					message: 'Internal error :(',
 					type: 'error',
@@ -602,11 +604,11 @@
 				return;
 			}
 			else if (!vertexSelected) {
-				addNewVertex(vertexType, vertexDB[vertexType], true);
+				addNewVertex(vertexName, vertexDB[vertexName], true);
 			}
 			else
-				addNewVertex(vertexType, vertexDB[vertexType]);
-		}; // window.addVertex = function (vertexType)
+				addNewVertex(vertexName, vertexDB[vertexName]);
+		}; // window.addVertex = function (vertexName)
 
 		window.Bond = function () {
 			if (!vertexSelected) {
@@ -680,11 +682,11 @@
 			return null;
 		};
 
-		function addNewVertex (vertexType, vertexDBObj, isSeparated) {
+		function addNewVertex (vertexName, vertexDBObj, isSeparated) {
 			isSeparated = (null == isSeparated) ? false: isSeparated;
 			if (isSeparated) {
 				var newVertex = {
-							symbol: vertexType,
+							symbol: vertexName,
 							size: vertexDBObj.size,
 							type: vertexDBObj.type,
 							x: width / 3 +'%',
@@ -698,7 +700,7 @@
 			}
 			else {
 				var newVertex = {
-							symbol: vertexType,
+							symbol: vertexName,
 							size: vertexDBObj.size,
 							type: vertexDBObj.type,
 							x: getVertexData(vertexSelected).x + getRandomInt (-15, 15),
@@ -721,7 +723,7 @@
 			}
 
 			buildCookingProcedure();
-		} // function addNewVertex (vertexType, vertexDBObj)
+		} // function addNewVertex (vertexName, vertexDBObj)
 
 		this.addNewBond = function () {
 			var vertexJustBeforeSelected_id = getVertexData(vertexJustBeforeSelected).id;
