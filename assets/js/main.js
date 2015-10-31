@@ -16,6 +16,34 @@
 	var vertexJustBeforeSelected;
 	var graphOperationObj;
 
+	$("#selectAddVertex").select2({
+	  ajax: {
+		url: "searchFood.php",
+	    dataType: 'json',
+	    delay: 250,
+	    data: function (params) {
+	      return {
+	        q: params.term, // search term
+	        page: params.page
+	      };
+	    },
+	    processResults: function (data, page) {
+	      // parse the results into the format expected by Select2.
+	      // since we are using custom formatting functions we do not need to
+	      // alter the remote JSON data
+	      return {
+	        results: data
+	      };
+	    },
+	    cache: true
+	  },
+	  escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
+	  minimumInputLength: 1,
+	  // templateResult: formatRepo, // omitted for brevity, see the source of this page
+	  // templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
+	});
+
+
 	// deselect node and bond when clicking other objects
 	d3.select("#cookingProcedureDisplay").on("click", function(){
 		if (vertexSelected)
