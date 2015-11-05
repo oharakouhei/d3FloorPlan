@@ -29,6 +29,11 @@
 	}
 
 	// 食材用select2
+	// こう書くと以前のchangeイベントがもう一度呼ばれる
+	$("#btnAddFood").click(function () {
+		$("#selectAddFood").change();
+	});
+
 	$("#selectAddFood").select2({
 	  ajax: {
 		url: "searchFood.php",
@@ -57,9 +62,15 @@
 	  // templateSelection: formatRepoSelection // omitted for brevity, see the source of this page
 	}).on("change", function () {
 		var txtSelected = $("#select2-selectAddFood-container").get(0).innerText;
-		$("#btnAddFood").on("click", addVertex(txtSelected, 'food'));
+		addVertex(txtSelected, 'food');
 	});
+
 	// 操作用select2
+	// こう書くと以前のchangeイベントがもう一度呼ばれる
+	$("#btnAddProcess").click(function () {
+		$("#selectAddProcess").change();
+	});
+
 	$("#selectAddProcess").select2({
 	  ajax: {
 		url: "searchProcess.php",
@@ -83,9 +94,13 @@
 	  minimumInputLength: 1,
 	}).on("change", function () {
 		var txtSelected = $("#select2-selectAddProcess-container").get(0).innerText;
-		$("#btnAddProcess").on("click", addVertex(txtSelected, 'process'));
+		addVertex(txtSelected, 'process');
 	});
 	// 道具用select2
+	$("#btnAddCookware").click(function () {
+		$("#selectAddCookware").change();
+	});
+
 	$("#selectAddCookware").select2({
 	  ajax: {
 		url: "searchCookware.php",
@@ -109,7 +124,7 @@
 	  minimumInputLength: 1,
 	}).on("change", function () {
 		var txtSelected = $("#select2-selectAddCookware-container").get(0).innerText;
-		$("#btnAddCookware").on("click", addVertex(txtSelected, 'cookware'));
+		addVertex(txtSelected, 'cookware');
 	});
 
 	// deselect node and bond when clicking other objects
@@ -174,7 +189,7 @@
 				.attr("height", height + '%')
 				.call(selectionGlove);
 
-	var setArrowDefineToSVG = function (svg) {
+	var setAbsoluteItemsToSVG = function (svg) {
 		svg.append('svg:defs').append('svg:marker')
 			.attr('id', 'end-arrow')
 			.attr('viewBox', '0 -5 10 10')
@@ -319,7 +334,7 @@
 					.attr("height", height + '%')
 					.call(selectionGlove);
 
-		setArrowDefineToSVG(svg);
+		setAbsoluteItemsToSVG(svg);
 
 		if (example)
 			newCookingProcedure = newCookingProcedure[example];
@@ -337,7 +352,6 @@
 			hideAfter: 2
 		});
 	};
-
 	window.loadCookingProcedureExample = function () {
 		newCookingProcedureSimulation (cookingProcedureExamples, $('#cookingProcedureExample').val().trim());
 
@@ -359,6 +373,7 @@
 		var nodesList, linksList;
 		nodesList = graph.nodes;
 		linksList = graph.links;
+
 
 		var force = d3.layout.force()
 						.nodes(nodesList)
@@ -444,18 +459,6 @@
 						.attr('d', 'M0,0L0,0');
 						// .style("stroke-width", function(d) { return (d.bondType * 3 - 2) * 2 + "px"; });
 
-					// // If double add second line
-					// d3.select(this)
-					// 	.filter(function(d) { return d.bondType >= 2; })
-					// 	.append("line")
-					// 	.style("stroke-width", function(d) { return (d.bondType * 2 - 2) * 2 + "px"; })
-					// 	.attr("class", "double");
-
-					// d3.select(this)
-					// 	.filter(function(d) { return d.bondType === 3; })
-					// 	.append("line")
-					// 	.attr("class", "triple");
-
 					// Give bond the power to be selected
 					d3.select(this)
 						.on("click", bondClicked);
@@ -464,8 +467,19 @@
 			// Delete removed links
 			link.exit().remove();
 
+			// var newVertex = {
+			// 	symbol: "完成",
+			// 	size: 8,
+			// 	type: "food",
+			// 	x: width / 3 +'%',
+			// 	y: height + '%',
+			// 	color: 'green',
+			// 	id: 10000 // Need to make sure is unique
+			// };
+			// nodes.push(newVertex);
+
 			// Update node data
-			node = node.data(nodes, function (d) {return d.id; });
+			node = node.data(nodes, function (d) { return d.id; });
 			// Create new nodes
 			node.enter().append("g")
 				.attr("class", "node")
