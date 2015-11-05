@@ -86,7 +86,10 @@
 						<div id="cookingProcedureDisplay" style="border: 1px solid black; margin: 10px 0 0 0; background-color: #FFF; height: 500px;" class="row"></div>
 					</div>
 					<div class="col-md-4">
-		                <textarea type="text" id="cookingProcedureInput" name="graph_query" class="form-control" style="height: 555px;" readonly></textarea>
+						<form action="./cgi-bin/test.cgi" method="post">
+							<textarea type="text" id="cookingProcedureInput" name="graph_query" class="form-control" style="height: 555px;" readonly></textarea>
+							<input class="btn btn-default pull-right" type="submit" value="送信">
+						</form>
 					</div>
 				</div>
 			</div>
