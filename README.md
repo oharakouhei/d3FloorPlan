@@ -22,10 +22,10 @@ phpとcgiを動かすので、apache等のサーバ環境上で動かす必要�
 apacheであれば，httpd.confにて
 
 ```
-    Alias /projectdir_cgi-bin/ "/path/to/DocumentRoot/projectdir/cgi-bin"
-    <Directory "/path/to/DocumentRoot/projectdir/cgi-bin">
-        Options ExecCGI
-    </Directory>
+Alias /projectdir_cgi-bin/ "/path/to/DocumentRoot/projectdir/cgi-bin"
+<Directory "/path/to/DocumentRoot/projectdir/cgi-bin">
+    Options ExecCGI
+</Directory>
 ```
 
 を追加する．Aliasの後の/projectdir_cgi-bin/は他のAliasと重ならなければ適当な名前で良いと思われる．
