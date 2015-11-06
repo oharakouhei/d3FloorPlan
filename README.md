@@ -13,7 +13,7 @@ $ which perl
 ```
 
 なら
-`#!/usr/bin/perl`
+`#!/usr/bin/local/perl`
 に．
 
 phpとcgiを動かすので、apache等のサーバ環境上で動かす必要がある．
