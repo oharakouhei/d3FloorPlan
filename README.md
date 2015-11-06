@@ -6,8 +6,12 @@ test.cgiの冒頭
 
 はperlへのpathで書き直す．
 例
-    $ which perl
-    /usr/bin/local/perl
+
+```
+$ which perl
+/usr/bin/local/perl
+```
+
 なら
 `#!/usr/bin/perl`
 に．
@@ -16,10 +20,14 @@ phpとcgiを動かすので、apache等のサーバ環境上で動かす必要�
 また，cgi動作のためにサーバの設定が必要．
 
 apacheであれば，httpd.confにて
+
+```
     Alias /projectdir_cgi-bin/ "/path/to/DocumentRoot/projectdir/cgi-bin"
     <Directory "/path/to/DocumentRoot/projectdir/cgi-bin">
         Options ExecCGI
     </Directory>
+```
+
 を追加する．Aliasの後の/projectdir_cgi-bin/は他のAliasと重ならなければ適当な名前で良いと思われる．
 
 
