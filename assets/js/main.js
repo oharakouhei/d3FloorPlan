@@ -2,6 +2,8 @@
 	var width = 100,
 		height = 100;
 
+	var intMaxNodeId = 0; // 出てきたノードのidの最大値
+
 	var cookingProcedureExamples = {};
 
 	var radius = d3.scale.sqrt()
@@ -342,7 +344,10 @@
 		// ノードに色を付ける
 		newCookingProcedure['nodes'].forEach(function (data, i) {
 			newCookingProcedure['nodes'][i].color = vertexProperty[data.type].color;
+			var vertexPropertyId = data.id;
+			if (intMaxNodeId < vertexPropertyId) { intMaxNodeId = vertexPropertyId; }
 		});
+		// 最大値更新(ノードidをuniqueかつ順番にするため)
 		graphOperationObj = new graphOperation(newCookingProcedure);
 
 		Messenger().post({
@@ -378,10 +383,11 @@
 		var force = d3.layout.force()
 						.nodes(nodesList)
 						.links(linksList)
-						.size([$("#cookingProcedureDisplay").width(), $("#cookingProcedureDisplay").height()]) // svg領域の横幅・縦幅を入れる
+						.size([$("#cookingProcedureDisplay").width(), 500]) // svg領域の横幅・縦幅を入れる
+						// .size([$("#cookingProcedureDisplay").width(), $("#cookingProcedureDisplay").height()]) // svg領域の横幅・縦幅を入れる
 						.charge(-1000)
-						.linkStrength(function (d) { return d.bondType * 1;})
-						.linkDistance(function(d) { return radius(d.source.size) + radius(d.target.size) + 20; })
+						.linkStrength(function (d) { return d.bondType * 1; })
+						.linkDistance(function (d) { return radius(d.source.size * 2) + radius(d.target.size) + 20; })
 						.on("tick", tick);
 
 		var links = force.links(),
@@ -437,12 +443,12 @@
 
 		function buildCookingProcedure () {
 			// 主観的評価実験用(NodeやBondに対するaddやremoveが起きたら)
-			if ($('#cookingProcedureExampleName').val()) {
-				$('#cookingProcedureExampleName').attr('value', '');
-			}
+			// if ($('#cookingProcedureExampleName').val()) {
+			// 	$('#cookingProcedureExampleName').attr('value', '');
+			// }
 
 			// Update link data
-			link = link.data(links, function (d) {return d.id; });
+			link = link.data(links, function (d) { return d.id; });
 
 			// Create new links
 			link.enter().insert("g", ".node")
@@ -479,7 +485,8 @@
 			// nodes.push(newVertex);
 
 			// Update node data
-			node = node.data(nodes, function (d) { return d.id; });
+			node = node.data( nodes, function (d) { return d.id; });
+			// node = node.data( nodes );
 			// Create new nodes
 			node.enter().append("g")
 				.attr("class", "node")
@@ -640,39 +647,39 @@
 			}
 		} // window.changeVertex
 
-		window.changeVertexSize = function (sizeDiff) {
-			if (!vertexSelected) {
-				Messenger().post({
-					message: 'No Vertex Selected',
-					type: 'error',
-					showCloseButton: true
-				});
-				return;
-			}
-			var vertexData = getVertexData(vertexSelected);
-			var changeVertexSizePossible = function (vertex) {
-				return (0 < vertex.size + sizeDiff);
-			};
+		// window.changeVertexSize = function (sizeDiff) {
+		// 	if (!vertexSelected) {
+		// 		Messenger().post({
+		// 			message: 'No Vertex Selected',
+		// 			type: 'error',
+		// 			showCloseButton: true
+		// 		});
+		// 		return;
+		// 	}
+		// 	var vertexData = getVertexData(vertexSelected);
+		// 	var changeVertexSizePossible = function (vertex) {
+		// 		return (0 < vertex.size + sizeDiff);
+		// 	};
 
-			if (!sizeDiff || ( -1 != sizeDiff && 1 != sizeDiff)) {
-				Messenger().post({
-					message: 'Internal error :(',
-					type: 'error',
-					showCloseButton: true
-				});
-				return;
-			}
-			else if (!changeVertexSizePossible(vertexData)) {
-				Messenger().post({
-					message: 'Vertex size cannot be 0 and less!',
-					type: 'error',
-					showCloseButton: true
-				});
-				return;
-			}
-			nodes[vertexData.index].size += sizeDiff;
-			updateNodeGElement("#node_"+vertexData.id);
-		}; // window.changeVertexSize = function (sizeDiff)
+		// 	if (!sizeDiff || ( -1 != sizeDiff && 1 != sizeDiff)) {
+		// 		Messenger().post({
+		// 			message: 'Internal error :(',
+		// 			type: 'error',
+		// 			showCloseButton: true
+		// 		});
+		// 		return;
+		// 	}
+		// 	else if (!changeVertexSizePossible(vertexData)) {
+		// 		Messenger().post({
+		// 			message: 'Vertex size cannot be 0 and less!',
+		// 			type: 'error',
+		// 			showCloseButton: true
+		// 		});
+		// 		return;
+		// 	}
+		// 	nodes[vertexData.index].size += sizeDiff;
+		// 	updateNodeGElement("#node_"+vertexData.id);
+		// }; // window.changeVertexSize = function (sizeDiff)
 
 		//
 		// @param vertexName ノード名(じゃがいも,炒める,包丁,等...)
@@ -686,12 +693,29 @@
 					showCloseButton: true
 				});
 				return;
+			} else if ('完成' == vertexName) {
+				var blAlreadyExistsCompleteNode = false;
+				nodes.some(function (data) {
+					if ('完成' == data.symbol) {
+						blAlreadyExistsCompleteNode = true;
+						return;
+					}
+				});
+				if (blAlreadyExistsCompleteNode) {
+					Messenger().post({
+						message: 'Complete node is already exists.',
+						type: 'error',
+						showCloseButton: true
+					});
+					return;
+				}
 			}
-			else if (!vertexSelected) {
+
+			if (!vertexSelected) {
 				addNewVertex(vertexName, vertexType, true);
-			}
-			else
+			} else {
 				addNewVertex(vertexName, vertexType);
+			}
 		}; // window.addVertex = function (vertexName)
 
 		window.Bond = function () {
@@ -768,7 +792,7 @@
 		};
 
 		function addNewVertex (vertexName, vertexType, isSeparated) {
-			isSeparated = (null == isSeparated) ? false: isSeparated;
+			isSeparated = (null == isSeparated) ? false : isSeparated;
 			if (isSeparated) {
 				var newVertex = {
 							symbol: vertexName,
@@ -778,12 +802,10 @@
 							y: 10,
 							bonds: 1,
 							color: vertexProperty[vertexType].color,
-							id: nodes.length // Need to make sure is unique
-						},
-
+							id: ++intMaxNodeId // Need to make sure is unique
+					};
 				n = nodes.push(newVertex);
-			}
-			else {
+			} else {
 				var newVertex = {
 							symbol: vertexName,
 							size: 8,
@@ -792,12 +814,11 @@
 							y: getVertexData(vertexSelected).y + getRandomInt (-15, 15),
 							bonds: 1,
 							color: vertexProperty[vertexType].color,
-							id: nodes.length, // Need to make sure is unique
-						},
-
+							id: ++intMaxNodeId, // Need to make sure is unique
+					};
 				n = nodes.push(newVertex);
 
-				getVertexData(vertexSelected).bonds++; // Increment bond count on selected vertex
+				// getVertexData(vertexSelected).bonds++; // Increment bond count on selected vertex
 
 				links.push({
 					source: newVertex,
@@ -915,6 +936,9 @@
 			links.forEach(function (d, i) {
 				d.source.y -= k;
 				d.target.y += k;
+				if ('完成' == d.target.symbol) {
+					d.target.y += 4*k;
+				}
 			});
 			link.selectAll("path")
 				.style('marker-end', 'url(#end-arrow)')
