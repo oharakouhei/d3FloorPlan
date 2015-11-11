@@ -718,7 +718,7 @@
 			}
 		}; // window.addVertex = function (vertexName)
 
-		window.Bond = function () {
+		window.addBond = function () {
 			if (!vertexSelected) {
 				Messenger().post({
 					message: 'No Vertex Selected',
@@ -726,8 +726,7 @@
 					showCloseButton: true
 				});
 				return;
-			}
-			else {
+			} else {
 				Messenger().post({
 					message: 'Please select bond target.',
 					type: 'info',
@@ -820,9 +819,19 @@
 
 				// getVertexData(vertexSelected).bonds++; // Increment bond count on selected vertex
 
+				var objSourceNode;
+				var objTargetNode;
+				if ('完成' == vertexName) {
+					objSourceNode = getVertexData(vertexSelected);
+					objTargetNode = newVertex;
+				} else {
+					objSourceNode = newVertex;
+					objTargetNode = getVertexData(vertexSelected);
+				}
+
 				links.push({
-					source: newVertex,
-					target: getVertexData(vertexSelected),
+					source: objSourceNode,
+					target: objTargetNode,
 					bondType: 1,
 					id: generateRandomID()
 				}); // Need to make sure is unique
@@ -835,10 +844,10 @@
 			var vertexJustBeforeSelected_id = getVertexData(vertexJustBeforeSelected).id;
 			var vertexSelected_id = getVertexData(vertexSelected).id;
 			// if there have already been a bond
-			for (var i = links.length - 1; i >= 0; i--) {
-				var source_id = links[i].source.id;
-				var target_id = links[i].target.id;
-				if ((source_id === vertexJustBeforeSelected_id && target_id === vertexSelected_id) || (target_id === vertexJustBeforeSelected_id && source_id === vertexSelected_id)) {
+			for (var i = links.length - 1; i >= 0; --i) {
+				var links_source_id = links[i].source.id;
+				var links_target_id = links[i].target.id;
+				if ((links_source_id === vertexJustBeforeSelected_id && links_target_id === vertexSelected_id) || (links_target_id === vertexJustBeforeSelected_id && links_source_id === vertexSelected_id)) {
 						Messenger().post({
 							message: 'There have already been a bond. Please push "Bond" button and try again.',
 							type: 'error',
@@ -851,7 +860,7 @@
 				}
 			}
 
-			getVertexData(vertexJustBeforeSelected).bonds++; // Increment bond count on selected vertex
+			// getVertexData(vertexJustBeforeSelected).bonds++; // Increment bond count on selected vertex
 
 			links.push({
 				source: getVertexData(vertexJustBeforeSelected),
